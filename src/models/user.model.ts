@@ -3,9 +3,25 @@ import { IUser } from '../interfaces/user.interface';
 
 const userSchema = new Schema(
   {
-    name: {
+    firstName: {
+      type: String,
+      required:true
+    },
+    lastName:{
       type: String
-    }
+    },
+    email:{
+      type:String,
+      required:true
+    },
+    password:{
+      type:String,
+      required:true
+    },
+    resetPasswordToken: { 
+      type: String,
+      required: false,
+    },
   },
   {
     timestamps: true
