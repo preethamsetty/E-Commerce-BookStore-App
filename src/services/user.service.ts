@@ -1,44 +1,29 @@
 import User from '../models/user.model';
-import { IUser } from '../interfaces/user.interface';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 class UserService {
 
-  //get all users
-  public getAllUsers = async (): Promise<IUser[]> => {
-    const data = await User.find();
-    return data;
-  };
+  // Log in user
+  public loginUser = async (body: { email: string; password: string }): Promise<{ token: string; email: string }> => {
+    const { email, password } = body;
 
-  //create new user
-  public newUser = async (body: IUser): Promise<IUser> => {
-    const data = await User.create(body);
-    return data;
-  };
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {     
+      throw new Error('Invalid email or password');
+    }
 
-  //update a user
-  public updateUser = async (_id: string, body: IUser): Promise<IUser> => {
-    const data = await User.findByIdAndUpdate(
-      {
-        _id
-      },
-      body,
-      {
-        new: true
-      }
-    );
-    return data;
-  };
+    // Compare the provided password with the hashed password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      throw new Error('Invalid email or password');
+    }
 
-  //delete a user
-  public deleteUser = async (_id: string): Promise<string> => {
-    await User.findByIdAndDelete(_id);
-    return '';
-  };
+    // Generate JWT 
+    const token = jwt.sign({user:{ _id: user._id,email: user.email}}, process.env.JWT_SECRET);
 
-  //get a single user
-  public getUser = async (_id: string): Promise<IUser> => {
-    const data = await User.findById(_id);
-    return data;
+    return { token, email}; 
   };
 }
 
