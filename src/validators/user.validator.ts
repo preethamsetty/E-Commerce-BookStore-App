@@ -3,6 +3,7 @@ import Joi from '@hapi/joi';
 import { Request, Response, NextFunction } from 'express';
 import HttpStatus from 'http-status-codes'
 class UserValidator {
+  
 
   // validate user registration data
   public registerUser = (req: Request, res: Response, next: NextFunction): void => {
