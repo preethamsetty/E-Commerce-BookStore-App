@@ -10,8 +10,15 @@ class UserRoutes {
   }
 
   private routes = () => {
-    //route to reset password
-    this.router.post('/resetpassword', this.UserController.resetPassword);
+    
+   //route to create a new user
+   this.router.post('', this.UserController.registerUser);
+    
+   //route to login
+   this.router.post('/login',this.UserController.loginUser);
+    
+        //route to reset password
+   this.router.post('/resetpassword', this.UserController.resetPassword);
   };
 
   public getRoutes = (): IRouter => {
