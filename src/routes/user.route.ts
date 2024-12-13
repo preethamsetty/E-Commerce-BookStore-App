@@ -9,8 +9,13 @@ class UserRoutes {
   }
 
   private routes = () => {
-    //route to create a new user
-    this.router.post('', this.UserController.registerUser);
+    
+   //route to create a new user
+   this.router.post('', this.UserController.registerUser);
+    
+   //route to login
+   this.router.post('/login',this.UserController.loginUser);
+  
   };
 
   public getRoutes = (): IRouter => {
