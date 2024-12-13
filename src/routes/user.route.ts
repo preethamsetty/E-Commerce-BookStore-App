@@ -1,19 +1,27 @@
 import express, { IRouter } from 'express';
 import userController from '../controllers/user.controller';
-import userValidator from '../validators/user.validator';
-import { userAuth } from '../middlewares/auth.middleware';
 
 class UserRoutes {
   private UserController = new userController();
   private router = express.Router();
-  private UserValidator = new userValidator();
 
   constructor() {
     this.routes();
   }
 
   private routes = () => {
-    this.router.post('/forgot-password', this.UserController.forgotPassword); //ForgotPassword
+
+   //route to create a new user
+   this.router.post('', this.UserController.registerUser);
+    
+   //route to login
+   this.router.post('/login',this.UserController.loginUser);
+    
+   //ForgotPassword
+   this.router.post('/forgot-password', this.UserController.forgotPassword); 
+    
+   //route to reset password
+   this.router.post('/resetpassword', this.UserController.resetPassword);
   };
 
   public getRoutes = (): IRouter => {
