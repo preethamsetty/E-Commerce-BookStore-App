@@ -36,6 +36,21 @@ class UserController {
   }
 };
 
+//Forgot Password
+  public forgotPassword = async(req:Request, res:Response)=>{
+    try{
+      const {email} =req.body;
+      await this.UserService.forgotPassword(email);
+      res.status(HttpStatus.OK).json({
+        code:HttpStatus.OK,
+        message:'Reset token sent to email successfully'
+      });
+    }
+    catch(error){
+       res.status(HttpStatus.BAD_REQUEST).send({ message: error.message });
+    }
+  };  
+
 // Reset User password
   public resetPassword = async (req: Request, res: Response): Promise<any> => {
     try {

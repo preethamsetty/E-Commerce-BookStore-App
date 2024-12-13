@@ -10,14 +10,17 @@ class UserRoutes {
   }
 
   private routes = () => {
-    
+
    //route to create a new user
    this.router.post('', this.UserController.registerUser);
     
    //route to login
    this.router.post('/login',this.UserController.loginUser);
     
-        //route to reset password
+   //ForgotPassword
+   this.router.post('/forgot-password', this.UserController.forgotPassword); 
+    
+   //route to reset password
    this.router.post('/resetpassword', this.UserController.resetPassword);
   };
 
