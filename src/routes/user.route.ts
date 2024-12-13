@@ -4,6 +4,7 @@ import userController from '../controllers/user.controller';
 class UserRoutes {
   private UserController = new userController();
   private router = express.Router();
+
   constructor() {
     this.routes();
   }
@@ -15,7 +16,9 @@ class UserRoutes {
     
    //route to login
    this.router.post('/login',this.UserController.loginUser);
-  
+    
+        //route to reset password
+   this.router.post('/resetpassword', this.UserController.resetPassword);
   };
 
   public getRoutes = (): IRouter => {

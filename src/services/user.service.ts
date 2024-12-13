@@ -38,7 +38,18 @@ class UserService {
     const token = jwt.sign({user:{ _id: user._id,email: user.email}}, process.env.JWT_SECRET);
 
     return { token, email}; 
-
+  };
+  
+  //reset password
+  public resetPassword = async (body: {
+    email: string;
+    password: string;
+  }): Promise<void> => {
+    if (!body.email) throw new Error('Invalid Token');
+    await User.updateOne(
+      { email: body.email },
+      { $set: { password: await bcrypt.hash(body.password, 9) } }
+    );
   };
 }
 
