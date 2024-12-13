@@ -1,15 +1,13 @@
-
 import Joi from '@hapi/joi';
 import { Request, Response, NextFunction } from 'express';
 import HttpStatus from 'http-status-codes'
-class UserValidator {
-  
+class userValidator {
 
   // validate user registration data
   public registerUser = (req: Request, res: Response, next: NextFunction): void => {
     const schema = Joi.object({
-      firstname: Joi.string().required(),
-      lastname: Joi.string().required(),
+      firstName: Joi.string().required(),
+      lastName: Joi.string().required(),
       email: Joi.string().email().required(),
       password: Joi.string().min(6).required(),
     });
@@ -52,6 +50,7 @@ class UserValidator {
   // validate reset password
   public resetPassword = (req: Request, res: Response, next: NextFunction): void => {
     const schema = Joi.object({
+      email: Joi.string().email().required(),
       password: Joi.string().min(6).required(),
     });
 
@@ -63,4 +62,4 @@ class UserValidator {
   };
 }
 
-export default UserValidator;
+export default userValidator;
