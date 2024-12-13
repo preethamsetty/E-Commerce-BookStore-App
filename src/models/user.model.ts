@@ -5,22 +5,18 @@ const userSchema = new Schema(
   {
     firstName: {
       type: String,
-      required:true
+      required: true
     },
-    lastName:{
+    lastName: {
       type: String
     },
-    email:{
-      type:String,
-      required:true
-    },
-    password:{
-      type:String,
-      required:true
-    },
-    resetPasswordToken: { 
+    email: {
       type: String,
-      required: false,
+      required: true
+    },
+    password: {
+      type: String,
+      required: true
     },
   },
   {
