@@ -17,11 +17,7 @@ const userSchema = new Schema(
     password:{
       type:String,
       required:true
-    },
-    resetPasswordToken: { 
-      type: String,
-      required: false,
-    },
+    }
   },
   {
     timestamps: true
