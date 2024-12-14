@@ -35,7 +35,7 @@ class UserService {
       throw new Error('Invalid email or password');
 
     // Generate JWT 
-    const token = jwt.sign({user:{ _id: user._id,email: user.email}}, process.env.JWT_SECRET);
+    const token = jwt.sign({user:{ _id: user._id,email: user.email}}, process.env.AUTH_SECRET_KEY);
 
     return { token, email}; 
   };
@@ -47,7 +47,7 @@ class UserService {
       throw new Error("User Not Found");
     }
     //Generate JWT token for Reset
-    const resetToken = jwt.sign({user:{id:user._id}},process.env.JWT_SECRET,{expiresIn:'12h'});
+    const resetToken = jwt.sign({user:{id:user._id}},process.env.FORGOTPASSWORD_SECRET_KEY);
 
     //Send Email With Token
     await sendResetEmail(email,resetToken);
