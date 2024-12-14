@@ -8,8 +8,8 @@ const transporter=nodemailer.createTransport({
     port:465,
     secure:true,
     auth:{ 
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: process.env.SECRET_MAIL_ID,
+        pass: process.env.SECRET_MAIL_PASSWORD,
     },
     tls:{
         rejectUnauthorized: false 
@@ -19,7 +19,7 @@ const transporter=nodemailer.createTransport({
 const sendResetEmail =async(email:string,resetToken:string)=>{
     const resetLink=`${resetToken}` ;
     const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: process.env.SECRET_MAIL_ID,
         to: email,
         subject: 'Password Reset Request',
         html: `
