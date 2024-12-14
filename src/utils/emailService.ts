@@ -19,9 +19,7 @@ const transporter=nodemailer.createTransport({
 const sendResetEmail =async(email:string,resetToken:string)=>{
     const resetLink=`${resetToken}` ;
     const mailOptions = {
-        from: {
-          name :"Fundoo Notes",
-          address:process.env.EMAIL_USER},
+        from: process.env.EMAIL_USER,
         to: email,
         subject: 'Password Reset Request',
         html: `
