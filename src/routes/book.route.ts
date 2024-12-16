@@ -4,7 +4,7 @@ import BookController from '../controllers/book.controller';
 
 class BookRoutes {
   private router = express.Router();
-  private bookController = new BookController();
+  private BookController = new BookController();
 
   constructor() {
     this.routes();
@@ -13,7 +13,7 @@ class BookRoutes {
   private routes = (): void => {
 
     // Route to get a book by its ID
-    this.router.get('/:id', this.bookController.getBookById);
+    this.router.get('/:id', this.BookController.getBookById);
 
   };
 

@@ -18,9 +18,9 @@ const userSchema = new Schema(
       type: String,
       required: true
     },
-    token:{
+    refreshToken:{
       type: String,
-      unique:true,
+      default: ''
     },
     role:{
       type:String,

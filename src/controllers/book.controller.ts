@@ -3,12 +3,12 @@ import HttpStatus from 'http-status-codes';
 import BookService from '../services/book.service';
 
 class BookController{
-    private bookService = new BookService();
+    private BookService = new BookService();
 
     public  getBookById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const bookId = req.params.id;
-            const data = await this.bookService.getBookById((bookId));
+            const data = await this.BookService.getBookById((bookId));
             if (!data) {
                     res.status(HttpStatus.NOT_FOUND).json({
                     code: HttpStatus.NOT_FOUND,

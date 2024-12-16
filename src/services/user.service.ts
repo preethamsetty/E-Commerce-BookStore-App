@@ -41,11 +41,11 @@ class UserService {
       throw new Error('Invalid email or password');
 
     // Generating Access Token
-    const accessToken = jwt.sign({user:{_id:user._id,email:user.email}},process.env.ACCESS_SECRET_KEY,{expiresIn:'60s'});
+    const accessToken = jwt.sign({user:{_id:user._id,email:user.email}},process.env.AUTH_SECRET_KEY,{expiresIn:'60s'});
     
     // Generating Refresh Token and saving in data base
     const refreshToken = jwt.sign({user:{ _id: user._id,email: user.email}}, process.env.REFRESH_SECRET_KEY);
-    user.token = refreshToken;
+    user.refreshToken = refreshToken;
     await user.save();
 
     return { accessToken,refreshToken, email}; 
