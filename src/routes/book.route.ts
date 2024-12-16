@@ -12,9 +12,11 @@ class BookRoutes {
 
   private routes = (): void => {
 
-    // Route to get a book by its ID
+    // Route to get a book by id
     this.router.get('/:id', this.BookController.getBookById);
 
+    // Getting all user books 
+      this.router.get('/', this.BooksController.getBooks); 
   };
 
   public getRoutes = (): IRouter => {
