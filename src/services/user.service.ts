@@ -3,6 +3,7 @@ import { IUser } from '../interfaces/user.interface';
 import { sendResetEmail } from '../utils/emailService';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { query } from 'express';
 
 class UserService {
   
@@ -47,23 +48,22 @@ class UserService {
       throw new Error("User Not Found");
     }
     //Generate JWT token for Reset
-    const resetToken = jwt.sign({user:{id:user._id}},process.env.FORGOTPASSWORD_SECRET_KEY);
+    const resetToken = jwt.sign({user:{id:user._id, email:email}},process.env.FORGOTPASSWORD_SECRET_KEY);
 
     //Send Email With Token
     await sendResetEmail(email,resetToken);
    };
 
   //reset password
-  public resetPassword = async (body: {
-    email: string;
-    password: string;
-  }): Promise<void> => {
-    if (!body.email) throw new Error('Invalid Token');
+  public resetPassword = async (body: any): Promise<void> => {
+    if (!body.body.email) throw new Error('Invalid Token');
     await User.updateOne(
-      { email: body.email },
-      { $set: { password: await bcrypt.hash(body.password, 9) } }
+      { email: body.body.email },
+      { $set: { password: await bcrypt.hash(body.body.password, 9) } }
     );
+    console.log("resetToken:",body.query.resetToken)
   };
+ 
 }
 
 export default UserService;
