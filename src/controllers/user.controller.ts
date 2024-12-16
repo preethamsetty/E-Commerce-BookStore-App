@@ -1,6 +1,8 @@
 import HttpStatus from 'http-status-codes';
 import userService from '../services/user.service';
 import { Request, Response, NextFunction } from 'express';
+import { IUser } from '../interfaces/user.interface';
+
 
 class UserController {
   public UserService = new userService();
@@ -12,7 +14,7 @@ class UserController {
     next: NextFunction
   ): Promise<void> => {
     try {
-      await this.UserService.registerUser(req.body);
+      await this.UserService.registerUser(req.body as IUser); 
       res.status(HttpStatus.CREATED).json({
         code: HttpStatus.CREATED,
         message: 'User registered successfully'
@@ -21,6 +23,24 @@ class UserController {
       next(error);
     }
   };
+
+  // Register admin
+  public registerAdmin = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      await this.UserService.registerUser(req.body as IUser, 'admin'); 
+      res.status(HttpStatus.CREATED).json({
+        code: HttpStatus.CREATED,
+        message: 'Admin registered successfully'
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
 
  // Log in user
  public loginUser = async (req: Request, res: Response, next: NextFunction): Promise<any> => {

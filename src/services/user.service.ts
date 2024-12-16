@@ -6,19 +6,25 @@ import jwt from 'jsonwebtoken';
 
 class UserService {
   
-  public registerUser = async (body: IUser): Promise<IUser> => {
-    // Check if user already exists
+  // Register user or admin
+  public registerUser = async (body: IUser, role: 'user' | 'admin' = "user"): Promise<IUser> => {
     const existingUser = await User.findOne({ email: body.email });
-    if (existingUser) 
-      throw new Error('User already exists');
-        // Hash the password
+    if (existingUser) {
+      throw new Error(`${role === 'admin' ? 'Admin' : 'User'} already exists`);
+    }
+
+    // Assign role programmatically (user or admin)
+    body.role = role;
+
+    // Hash the password
     const hashedPassword = await bcrypt.hash(body.password, 10);
     body.password = hashedPassword;
 
-    // Create a new user
+    // Create the user or admin
     const data = await User.create(body);
     return data;
   };
+
 
   // Log in user
   public loginUser = async (body: { email: string; password: string }): Promise<{ token: string; email: string }> => {
@@ -47,7 +53,7 @@ class UserService {
       throw new Error("User Not Found");
     }
     //Generate JWT token for Reset
-    const resetToken = jwt.sign({user:{id:user._id}},process.env.FORGOTPASSWORD_SECRET_KEY);
+    const resetToken = jwt.sign({user:{id:user._id, email:email}},process.env.FORGOTPASSWORD_SECRET_KEY);
 
     //Send Email With Token
     await sendResetEmail(email,resetToken);
