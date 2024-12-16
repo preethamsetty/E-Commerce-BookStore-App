@@ -45,10 +45,10 @@ class UserController {
  // Log in user
  public loginUser = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
   try {
-    const { token , email} = await this.UserService.loginUser(req.body);
+    const {  accessToken,refreshToken, email} = await this.UserService.loginUser(req.body);
     res.status(HttpStatus.OK).json({
       code: HttpStatus.OK,
-      data: { email , token }, 
+      data: { email , accessToken, refreshToken}, 
       message: 'Log in successful'
     });
   } catch (error) {

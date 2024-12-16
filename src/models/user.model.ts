@@ -18,6 +18,10 @@ const userSchema = new Schema(
       type: String,
       required: true
     },
+    token:{
+      type: String,
+      unique:true,
+    },
     role:{
       type:String,
       enum: ['user', 'admin'], 
