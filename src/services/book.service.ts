@@ -6,7 +6,12 @@ class BookService {
   //get book by id
   public getBookById = async (bookId: string): Promise<IBook | null> => {
     const book = await Book.findById(bookId); 
-    return book;
+    // return book;
+    if(!book){
+      throw new Error("Book Not found")
+    }
+    else 
+      return book
   };
   
   // Get all user books
