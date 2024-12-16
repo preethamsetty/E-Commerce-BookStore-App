@@ -1,23 +1,27 @@
-import express from 'express';
-import BooksController from '../controllers/book.controller';
+import express, { IRouter } from 'express';
+import BookController from '../controllers/book.controller';
+
 
 class BookRoutes {
+  private router = express.Router();
+  private BookController = new BookController();
 
-    private BooksController = new BooksController();
-    private router = express.Router();
-  
-    constructor() {
-      this.routes();
-    }
-  
-    public routes = () => { 
-       
-      // Getting User Books Data 
-      this.router.get('/', this.BooksController.getBooks); 
-    };
-    public getRoutes = () => {
-      return this.router;
-    };
+  constructor() {
+    this.routes();
   }
 
-  export default BookRoutes;
+  private routes = (): void => {
+
+    // Route to get a book by id
+    this.router.get('/:id', this.BookController.getBookById);
+
+    // Getting all user books 
+      this.router.get('/', this.BooksController.getBooks); 
+  };
+
+  public getRoutes = (): IRouter => {
+    return this.router;
+  };
+}
+
+export default BookRoutes;

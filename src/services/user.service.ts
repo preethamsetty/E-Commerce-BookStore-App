@@ -27,8 +27,8 @@ class UserService {
   };
 
 
-  // Log in user
-  public loginUser = async (body: { email: string; password: string }): Promise<{ token: string; email: string }> => {
+   // Log in user
+   public loginUser = async (body: { email: string; password: string }): Promise<{ accessToken: string; refreshToken: string; email: string }> => {
     const { email, password } = body;
 
     // Check if user exists
@@ -41,10 +41,15 @@ class UserService {
     if (!isMatch)
       throw new Error('Invalid email or password');
 
-    // Generate JWT 
-    const token = jwt.sign({user:{ _id: user._id,email: user.email}}, process.env.AUTH_SECRET_KEY);
+    // Generating Access Token
+    const accessToken = jwt.sign({user:{_id:user._id,email:user.email}},process.env.AUTH_SECRET_KEY,{expiresIn:'60s'});
+    
+    // Generating Refresh Token and saving in data base
+    const refreshToken = jwt.sign({user:{ _id: user._id,email: user.email}}, process.env.REFRESH_SECRET_KEY);
+    user.refreshToken = refreshToken;
+    await user.save();
 
-    return { token, email}; 
+    return { accessToken,refreshToken, email}; 
   };
 
   //Forgot Password
