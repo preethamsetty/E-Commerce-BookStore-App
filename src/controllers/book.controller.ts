@@ -10,21 +10,17 @@ class BookController{
         try {
             const bookId = req.params.id;
             const data = await this.BookService.getBookById((bookId));
-            if (!data) {
-                    res.status(HttpStatus.NOT_FOUND).json({
-                    code: HttpStatus.NOT_FOUND,
-                    message: 'Book not found'
-                    });
-                    return;
-                }
                 res.status(HttpStatus.OK).json({
                     code: HttpStatus.OK,
                     message: 'Book fetched successfully',
                     data
                 });
-        } catch (error) {
-          next(error);
-        }
+            } catch (error)  {
+              res.status(HttpStatus.BAD_REQUEST).json({
+                  code: HttpStatus.BAD_REQUEST,
+                  Error: error.message,
+              });
+            }
       };
   
   //Get All Books 
