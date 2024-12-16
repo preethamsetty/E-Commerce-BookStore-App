@@ -25,6 +25,9 @@ class UserRoutes {
     
    //route to reset password
    this.router.post('/resetpassword',this.UserValidator.resetPassword, this.UserController.resetPassword);
+
+   //route to refreshToken
+   this.router.get('/refreshtoken/:id',this.UserValidator.id, this.UserController.refreshtoken)
   };
 
   public getRoutes = (): IRouter => {

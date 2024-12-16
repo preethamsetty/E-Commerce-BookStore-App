@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { IUser } from '../interfaces/user.interface';
+import { required } from '@hapi/joi';
 
 const userSchema = new Schema(
   {
@@ -17,7 +18,11 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true
-    }
+    },
+    refreshToken: {
+      type: String,
+      required: true
+    },
   },
   {
     timestamps: true

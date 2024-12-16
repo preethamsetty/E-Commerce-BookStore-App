@@ -60,6 +60,18 @@ class userValidator {
     else
       next();
   };
+
+  public id = (req: Request, res: Response, next: NextFunction): void => {
+    const schema = Joi.object({
+      id: Joi.string().required(),
+    });
+
+    const { error } = schema.validate(req.params);
+    if (error)
+      res.status(HttpStatus.BAD_REQUEST).json({Code:400, Error: error.message})
+    else
+      next();
+  };
 }
 
 export default userValidator;
