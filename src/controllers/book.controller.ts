@@ -18,7 +18,7 @@ class BookController{
                 }
                 res.status(HttpStatus.OK).json({
                     code: HttpStatus.OK,
-                    message: 'Note fetched successfully',
+                    message: 'Book fetched successfully',
                     data
                 });
         } catch (error) {
