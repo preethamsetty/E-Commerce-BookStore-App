@@ -2,7 +2,7 @@ import express, { IRouter } from 'express';
 import BookController from '../controllers/book.controller';
 
 
-class NoteRoutes {
+class BookRoutes {
   private router = express.Router();
   private bookController = new BookController();
 
@@ -22,4 +22,4 @@ class NoteRoutes {
   };
 }
 
-export default NoteRoutes;
+export default BookRoutes;

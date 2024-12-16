@@ -1,7 +1,10 @@
 import express, { IRouter } from 'express';
+import userRoute from './user.route';
+import BookRoutes from './book.route';
 const router = express.Router();
 
-import userRoute from './user.route';
+
+
 
 /**
  * Function contains Application routes
@@ -13,6 +16,7 @@ const routes = (): IRouter => {
     res.json('Welcome');
   });
   router.use('/users', new userRoute().getRoutes());
+  router.use('/books', new BookRoutes().getRoutes());
 
   return router;
 };
