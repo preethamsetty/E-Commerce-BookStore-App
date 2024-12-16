@@ -47,7 +47,7 @@ class UserService {
       throw new Error("User Not Found");
     }
     //Generate JWT token for Reset
-    const resetToken = jwt.sign({user:{id:user._id}},process.env.FORGOTPASSWORD_SECRET_KEY);
+    const resetToken = jwt.sign({user:{id:user._id, email:email}},process.env.FORGOTPASSWORD_SECRET_KEY);
 
     //Send Email With Token
     await sendResetEmail(email,resetToken);
