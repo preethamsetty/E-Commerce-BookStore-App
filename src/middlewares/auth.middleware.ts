@@ -34,8 +34,11 @@ export const authMiddleware = (role: 'auth' | 'reset' = 'auth') => async (
         // Verify the token and attach data to the request
       const decoded: any = jwt.verify(bearerToken, secretKey);
       // if(decoded){
+      
         if (role === 'reset') 
-          req.body.email = decoded.user.email;// Attach reset email for password recovery
+          {req.body.email = decoded.user.email;
+            console.log(req.body)
+          }// Attach reset email for password recovery
         else {
           req.body.email = decoded.email; // Attach email for User/Admin roles
           req.body.role = decoded.role;   // Include role in the request
@@ -51,4 +54,4 @@ export const authMiddleware = (role: 'auth' | 'reset' = 'auth') => async (
       error: error instanceof jwt.JsonWebTokenError ? 'Invalid or expired token' : error.message,
     });
   }
-};
+}
