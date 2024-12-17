@@ -6,6 +6,5 @@ export interface IUser extends Document {
   lastName: string;
   email: string;
   password: string;
-  refreshToken: string;
+  role: 'user' | 'admin';
 }
-

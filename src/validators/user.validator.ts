@@ -50,7 +50,7 @@ class userValidator {
   // validate reset password
   public resetPassword = (req: Request, res: Response, next: NextFunction): void => {
     const schema = Joi.object({
-      email: Joi.string().email().required(),
+      // email: Joi.string().email().required(),
       password: Joi.string().min(6).required(),
     });
 

@@ -17,7 +17,8 @@ const transporter=nodemailer.createTransport({
 })
 
 const sendResetEmail =async(email:string,resetToken:string)=>{
-    const resetLink=`${resetToken}` ;
+    //const resetLink=`${resetToken}` ;
+    const resetLink = `http://localhost:${ process.env.APP_PORT}/api/v1/users/resetpassword?resetToken=${resetToken}`;
     const mailOptions = {
         from: process.env.SECRET_MAIL_ID,
         to: email,
@@ -25,7 +26,7 @@ const sendResetEmail =async(email:string,resetToken:string)=>{
         html: `
           <h3>You requested a password reset</h3>
           <p>Please click the link below to reset your password:</p>
-          <p>${resetLink}</p>
+          <p>${resetLink}</p>   
           <p>If you did not request this, please ignore this email.</p>
         `,
        
