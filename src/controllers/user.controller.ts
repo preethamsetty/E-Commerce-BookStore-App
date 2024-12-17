@@ -87,6 +87,21 @@ class UserController {
       });
     }
   };
+
+  public refreshtoken = async (req: Request, res: Response): Promise<any> => {
+    try {
+      const token = await this.UserService.refreshToken(req.params.id);
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        data: token
+      });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        message: `${error.message}`
+      });
+    }
+  };
 }
 
 export default UserController;
