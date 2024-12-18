@@ -11,7 +11,7 @@ const bookSchema = new Schema(
       type: String,
       required: true,
     },
-    imgUrl: {
+    bookImage: {
       type: String,
       required: true,
     },
@@ -31,7 +31,7 @@ const bookSchema = new Schema(
       type: Number,
       required: true,
     },
-    adminId: {
+    admin_user_id: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: 'User', 

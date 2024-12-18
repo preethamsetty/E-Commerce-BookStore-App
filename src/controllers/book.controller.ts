@@ -4,8 +4,30 @@ import BookService from '../services/book.service';
 
 class BookController{
     private BookService = new BookService();
+
+    // Create a book
+    public createBook = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      try {
+          const bookData = req.body; // Book data from the request body
+          const data = await this.BookService.createBook(bookData);
+
+          res.status(HttpStatus.CREATED).json({
+              code: HttpStatus.CREATED,
+              message: 'Book created successfully',
+              data,
+          });
+      } catch (error) {
+          res.status(HttpStatus.BAD_REQUEST).json({
+              code: HttpStatus.BAD_REQUEST,
+              message: error.message,
+              error: error,
+          });
+      }
+  };
+
+
     
-  //Get Book by id
+    //Get Book by id
     public  getBookById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const bookId = req.params.id;
