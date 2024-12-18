@@ -1,5 +1,6 @@
 import Book from '../models/book.model';
 import { IBook } from '../interfaces/book.interface';
+import { IUser } from '../interfaces/user.interface';
 
 class BookService {
 
@@ -20,6 +21,18 @@ class BookService {
     else
         return allBooks
   };
+
+  //update book by Id
+  public updateBookInfoById = async (bookId:string,updateData:Partial<IUser>): Promise<IBook | void> => {
+    const book = await Book.findById(bookId);
+    if(!book){
+      throw new Error("Book Not Exit");
+    }
+    else{
+      return await Book.findByIdAndUpdate(bookId, updateData, { new: true });
+    }   
+  };
+
 }
 
 export default BookService;

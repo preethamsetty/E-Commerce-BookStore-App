@@ -3,6 +3,7 @@ import { IUser } from '../interfaces/user.interface';
 import { sendResetEmail } from '../utils/emailService';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { query } from 'express';
 
 class UserService {
   
@@ -68,9 +69,18 @@ class UserService {
   public resetPassword = async (body: any): Promise<void> => {
     if (!body.email) throw new Error('Invalid Token');
     await User.updateOne(
-      { email: body.email },
-      { $set: { password: await bcrypt.hash(body.password, 9) } }
+      { email: body.body.email },
+      { $set: { password: await bcrypt.hash(body.body.password, 9) } }
     );
+    console.log("resetToken:",body.query.resetToken)
+  };
+//refreshToken usage
+  public refreshToken = async (id: string): Promise<string> => {
+    const user = await User.findOne({ _id:id });
+    if(user)
+      return user.refreshToken;
+    else
+    throw new Error("User Not Found");
   };
 //refreshToken usage
   public refreshToken = async (id: string): Promise<string> => {

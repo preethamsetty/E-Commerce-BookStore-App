@@ -17,6 +17,8 @@ class BookRoutes {
     // Route to get a book by id
     this.router.get('/:id', this.BookController.getBookById);
 
+    //Update by id
+    this.router.put('/:id',this.BookController.updateBookInfoById)
   };
 
   public getRoutes = (): IRouter => {
