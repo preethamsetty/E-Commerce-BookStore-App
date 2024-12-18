@@ -1,10 +1,10 @@
 import { Schema, model } from 'mongoose';
+import { ICart } from '../interfaces/cart.interface';
 
 const cartSchema = new Schema(
   {
     userId: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
+        type: String,
         required: true,
     },
     totalPrice: {
@@ -34,4 +34,4 @@ const cartSchema = new Schema(
   }
 );
 
-export default model('Cart', cartSchema);
+export default model<ICart>('Cart', cartSchema);
