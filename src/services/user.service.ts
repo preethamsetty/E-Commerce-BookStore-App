@@ -67,14 +67,29 @@ class UserService {
 
   //reset password
   public resetPassword = async (body: any): Promise<void> => {
-    if (!body.body.email) throw new Error('Invalid Token');
+    if (!body.email) throw new Error('Invalid Token');
     await User.updateOne(
       { email: body.body.email },
       { $set: { password: await bcrypt.hash(body.body.password, 9) } }
     );
     console.log("resetToken:",body.query.resetToken)
   };
- 
+//refreshToken usage
+  public refreshToken = async (id: string): Promise<string> => {
+    const user = await User.findOne({ _id:id });
+    if(user)
+      return user.refreshToken;
+    else
+    throw new Error("User Not Found");
+  };
+//refreshToken usage
+  public refreshToken = async (id: string): Promise<string> => {
+    const user = await User.findOne({ _id:id });
+    if(user)
+      return user.refreshToken;
+    else
+    throw new Error("User Not Found");
+  };
 }
 
 export default UserService;

@@ -9,4 +9,3 @@ export interface IUser extends Document {
   refreshToken:string;
   role: 'user' | 'admin';
 }
-

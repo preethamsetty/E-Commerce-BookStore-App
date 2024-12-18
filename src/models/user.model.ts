@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { IUser } from '../interfaces/user.interface';
+import { required } from '@hapi/joi';
 
 const userSchema = new Schema(
   {
@@ -27,7 +28,6 @@ const userSchema = new Schema(
       type:String,
       enum: ['user', 'admin'], 
     }
-
   },
   {
     timestamps: true
