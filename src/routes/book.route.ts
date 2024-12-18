@@ -22,6 +22,10 @@ class BookRoutes {
 
     //Update by id
     this.router.put('/:id',this.BookController.updateBookInfoById)
+
+    //Delete a book by id
+    this.router.delete('/:id', this.BookController.deleteBook);
+
   };
 
   public getRoutes = (): IRouter => {
