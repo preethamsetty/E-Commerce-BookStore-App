@@ -31,7 +31,7 @@ class BookService {
     else{
       return await Book.findByIdAndUpdate(bookId, updateData, { new: true });
     }   
-  }
+  };
 
 }
 

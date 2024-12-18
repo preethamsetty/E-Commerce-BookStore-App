@@ -19,8 +19,6 @@ class BookRoutes {
 
     //Update by id
     this.router.put('/:id',this.BookController.updateBookInfoById)
-
-
   };
 
   public getRoutes = (): IRouter => {
