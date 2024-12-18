@@ -46,6 +46,15 @@ class BookService {
     }   
   };
 
+
+  // Delete a book by id
+  public deleteBookById = async (bookId: string): Promise<void> => {
+    const book = await Book.findByIdAndDelete(bookId);
+    if (!book) {
+      throw new Error('Book not found');
+  }
+};
+
 }
 
 export default BookService;

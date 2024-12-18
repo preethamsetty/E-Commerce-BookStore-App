@@ -80,6 +80,25 @@ class BookController{
     }
 
   }
+
+      // Delete a Book by id
+      public deleteBook = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+          const bookId = req.params.id;
+          await this.BookService.deleteBookById(bookId);
+
+        res.status(HttpStatus.OK).json({
+          code: HttpStatus.OK,
+          message: 'Book deleted successfully',
+        });
+        } catch (error) {
+          res.status(HttpStatus.BAD_REQUEST).json({
+          code: HttpStatus.BAD_REQUEST,
+          Error: error.message,
+        });
+  } 
+};
+
 }
 
 export default BookController;
