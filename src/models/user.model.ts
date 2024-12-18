@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { IUser } from '../interfaces/user.interface';
+import { required } from '@hapi/joi';
 
 const userSchema = new Schema(
   {
@@ -8,7 +9,8 @@ const userSchema = new Schema(
       required: true
     },
     lastName: {
-      type: String
+      type: String,
+      required: true
     },
     email: {
       type: String,
@@ -17,6 +19,14 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true
+    },
+    refreshToken:{
+      type: String,
+      default: ''
+    },
+    role:{
+      type:String,
+      enum: ['user', 'admin'], 
     }
   },
   {

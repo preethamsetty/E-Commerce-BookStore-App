@@ -50,11 +50,23 @@ class userValidator {
   // validate reset password
   public resetPassword = (req: Request, res: Response, next: NextFunction): void => {
     const schema = Joi.object({
-      email: Joi.string().email().required(),
+      // email: Joi.string().email().required(),
       password: Joi.string().min(6).required(),
     });
 
     const { error } = schema.validate(req.body);
+    if (error)
+      res.status(HttpStatus.BAD_REQUEST).json({Code:400, Error: error.message})
+    else
+      next();
+  };
+
+  public id = (req: Request, res: Response, next: NextFunction): void => {
+    const schema = Joi.object({
+      id: Joi.string().required(),
+    });
+
+    const { error } = schema.validate(req.params);
     if (error)
       res.status(HttpStatus.BAD_REQUEST).json({Code:400, Error: error.message})
     else
