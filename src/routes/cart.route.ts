@@ -14,6 +14,8 @@ class CartRoutes {
     this.router.delete('/:BookId', authMiddleware(), this.CartController.removeItem);
 
 
+    this.router.put('/:BookId/', authMiddleware(), this.CartController.updateQuantity);
+
   };
 
   public getRoutes = (): IRouter => {
