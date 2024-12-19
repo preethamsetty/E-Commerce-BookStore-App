@@ -55,19 +55,5 @@ class bookValidator {
       next();
   };
 
-
-  // Validate for getBooks
-  public getBooks = (req: Request, res: Response, next: NextFunction): void => {
-    const schema = Joi.object({
-      adminId: Joi.string().required(), // fetch books of a specific admin
-    });
-
-    const { error } = schema.validate(req.query);
-    if (error)
-      res.status(HttpStatus.BAD_REQUEST).json({ Code: 400, Error: error.message });
-    else
-      next();
-  };
-
 }
 export default bookValidator;
