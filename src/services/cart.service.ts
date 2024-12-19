@@ -60,6 +60,20 @@ class CartService {
       return existData
     }
   };
+
+  // Delete the cart
+  public deleteCart =  async (userId :string ):Promise<ICart | void> => {
+
+    const cart = await Cart.findOne({ userId });
+    if (!cart) throw new Error("User doesn't have Cart");
+    await Cart.deleteOne({ userId });
+    
+  };
+
 }
 
+
+
 export default CartService;
+
+

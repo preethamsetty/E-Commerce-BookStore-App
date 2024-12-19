@@ -27,6 +27,26 @@ class CartController {
     }
   };
 
+  public deleteCart = async(
+    req:Request,
+    res:Response,
+    next:NextFunction
+  ):Promise<void> =>{
+    try {
+      const data = await this.CartService.deleteCart(req.body.userId);
+      res.status(HttpStatus.OK).json({
+        code : HttpStatus.OK,
+        data : data ,
+        message :"Cart Deleted Successfully"
+      })
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code : HttpStatus.BAD_REQUEST,
+        error : error.message
+      })
+    }
+  }
+
 }
 
 export default CartController;

@@ -12,6 +12,7 @@ class CartRoutes {
   private routes = (): void => {
 
     this.router.post('/:BookId', authMiddleware(), this.CartController.addToCart);
+    this.router.delete('/:UserId', authMiddleware(), this.CartController.deleteCart);
 
   };
 
