@@ -74,14 +74,7 @@ class UserService {
     );
     console.log("resetToken:",body.query.resetToken)
   };
-//refreshToken usage
-  public refreshToken = async (id: string): Promise<string> => {
-    const user = await User.findOne({ _id:id });
-    if(user)
-      return user.refreshToken;
-    else
-    throw new Error("User Not Found");
-  };
+
 //refreshToken usage
   public refreshToken = async (id: string): Promise<string> => {
     const user = await User.findOne({ _id:id });
