@@ -4,19 +4,17 @@ import { IWishList } from '../interfaces/wishlist.interface';
 const wishListSchema = new Schema(
   {
     userId: {
-      type:String,
+      type: String,
       required: true,
-      ref: 'User',
     },
     books: {
       type: [
         {
           bookId: {
             type: String,
-            ref: 'Book', 
             required: true,
           },
-          title: {
+          bookName: {
             type: String,
             required: true,
           },
@@ -30,12 +28,13 @@ const wishListSchema = new Schema(
           },
         },
       ],
-      default: [], 
+      default: [],
     },
   },
   {
-    timestamps: true, 
+    timestamps: true,
   }
 );
+
 
 export default model<IWishList>('WishList', wishListSchema);
