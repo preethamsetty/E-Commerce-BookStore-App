@@ -27,6 +27,31 @@ class CartController {
     }
   };
 
+  // Update the Quantity
+  public updateQuantity = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const quantityChange = req.body.quantityChange; 
+      const data = await this.CartService.updateQuantity(
+        req.body.userId,
+        req.params.BookId,
+        quantityChange
+      );
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        data: data,
+      });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        error: error.message,
+      });
+    }
+  };
+  
 }
 
 export default CartController;
