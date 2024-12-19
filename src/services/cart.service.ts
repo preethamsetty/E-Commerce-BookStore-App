@@ -61,7 +61,7 @@ class CartService {
     }
   };
 
-// update the quantity
+  // update the quantity
 public updateQuantity = async (
   userId: string,
   BookId: string,
@@ -110,6 +110,54 @@ public updateQuantity = async (
   cart.totalPrice += quantityChange * bookDetails.price;
   cart.totalDiscountPrice += quantityChange * bookDetails.discountPrice;
 
+  await cart.save();
+  return cart;
+};
+
+//Remove Book from Cart
+public removeItem = async (body: { userId: string }, bookId: string): Promise<ICart | undefined> => {
+  const cart = await Cart.findOne({ userId: body.userId });
+  if (!cart) {
+    throw new Error("Cart not found");
+  }
+
+  // Check if the book exists in the cart
+  const existingBook = cart.books.find((book: { bookId: string }) => book.bookId === bookId);
+  if (!existingBook) {
+    throw new Error("Book not found in cart");
+  }
+
+  const bookDetails = await Book.findById(bookId);
+  if (!bookDetails) {
+    throw new Error("Book details not found");
+  }
+
+  // Decrement the quantity of the book or remove it if quantity becomes zero
+  let updatedBooks = cart.books.map((book: { bookId: string; quantity: number }) => {
+    if (book.bookId === bookId) {
+      return {
+        ...book,
+        quantity: book.quantity - 1,
+      };
+    }
+    return book;
+  });
+
+  // Filter out books with quantity <= 0
+  updatedBooks = updatedBooks.filter((book: { quantity: number }) => book.quantity > 0);
+
+  // Update cart values
+  cart.books = updatedBooks;
+  cart.totalPrice -= bookDetails.price;
+  cart.totalDiscountPrice -= bookDetails.discountPrice;
+  cart.totalQuantity -= 1;
+
+  // Ensure totals don't go negative
+  cart.totalPrice = Math.max(cart.totalPrice, 0);
+  cart.totalDiscountPrice = Math.max(cart.totalDiscountPrice, 0);
+  cart.totalQuantity = Math.max(cart.totalQuantity, 0);
+
+  // Save updated cart
   await cart.save();
   return cart;
 };
