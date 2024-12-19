@@ -44,7 +44,7 @@ class UserService {
     const accessToken = jwt.sign({user:{_id:user._id, role: user.role, email:user.email}},process.env.AUTH_SECRET_KEY/* ,{expiresIn:'60s'} */);
     
     // Generating Refresh Token and saving in data base
-    const refreshToken = jwt.sign({user:{ _id: user._id,email: user.email}}, process.env.REFRESH_SECRET_KEY);
+    const refreshToken = jwt.sign({user:{ _id: user._id, role: user.role, email: user.email}}, process.env.REFRESH_SECRET_KEY, {expiresIn:'7d'});
     user.refreshToken = refreshToken;
     await user.save();
 
@@ -75,11 +75,13 @@ class UserService {
 
   //refreshToken usage
   public refreshToken = async (id: string): Promise<string> => {
-    const user = await User.findOne({ _id:id });
-    if(user)
-      return user.refreshToken;
-    else
-    throw new Error("User Not Found");
+    const userData = await User.findOne({ _id:id });
+    if(!userData)
+      throw new Error("User Not Found");
+    const { user } = jwt.verify(userData.refreshToken, process.env.REFRESH_SECRET_KEY) as { user: { _id: string; role: string; email: string } };
+    
+    return jwt.sign({user:{ _id: user._id, role: user.role, email: user.email}}, process.env.AUTH_SECRET_KEY, {expiresIn:'30m'});
+    
   };
 }
 

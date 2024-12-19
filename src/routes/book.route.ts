@@ -12,10 +12,10 @@ class BookRoutes {
   private routes = (): void => {
 
     //create a book
-    this.router.post('/create', this.BookController.createBook);
+    this.router.post('', this.BookController.createBook);
 
     // Getting all user books 
-    this.router.get('/', this.BookController.getBooks); 
+    this.router.get('', this.BookController.getBooks); 
 
     // Route to get a book by id
     this.router.get('/:id', this.BookController.getBookById);

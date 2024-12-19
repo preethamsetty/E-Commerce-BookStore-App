@@ -90,7 +90,7 @@ class UserController {
 
   public refreshtoken = async (req: Request, res: Response): Promise<any> => {
     try {
-      const token = await this.UserService.refreshToken(req.params.id);
+      const token = await this.UserService.refreshToken(req.body.userId);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
         data: token
