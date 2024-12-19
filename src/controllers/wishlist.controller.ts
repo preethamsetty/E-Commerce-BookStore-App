@@ -24,6 +24,26 @@ class WishlistController {
       });
     }
   };
+
+  // Get Wishlist
+  public getWishlist = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { userId } = req.body;
+
+      const wishlist = await this.wishlistService.getWishlist(userId);
+
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        message: "Wishlist retrieved successfully",
+        data: wishlist,
+      });
+    } catch (error) {
+      res.status(HttpStatus.NOT_FOUND).json({
+        code: HttpStatus.NOT_FOUND,
+        message: error.message,
+      });
+    }
+  };
 }
 
 export default WishlistController;
