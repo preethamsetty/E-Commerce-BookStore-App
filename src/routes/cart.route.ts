@@ -13,6 +13,8 @@ class CartRoutes {
 
     this.router.post('/:BookId', authMiddleware(), this.CartController.addToCart);
 
+    this.router.put('/:BookId/', authMiddleware(), this.CartController.updateQuantity);
+
   };
 
   public getRoutes = (): IRouter => {
