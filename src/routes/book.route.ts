@@ -14,11 +14,13 @@ class BookRoutes {
 
   private routes = (): void => {
     // Create a book - Only admins
-    this.router.post('/create', authMiddleware(), isAdmin, this.BookValidator.createBook, this.BookController.createBook
-    );
+    this.router.post('', authMiddleware(), isAdmin, this.BookValidator.createBook, this.BookController.createBook);
 
-    // Get all books - users/admins
-    this.router.get('/', this.BookController.getBooks);
+    // Getting all user books 
+    this.router.get('', this.BookController.getBooks); 
+
+    // Route to get a book by id
+    this.router.get('/:id', this.BookController.getBookById);
 
     // get book by id - users/admins
     this.router.get('/:id', this.BookValidator.getBookById, this.BookController.getBookById);

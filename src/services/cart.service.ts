@@ -9,8 +9,11 @@ class CartService {
     const isUser = await User.findById(userId);
 
     if(!isUser) throw new Error("User doesn't exist");
+
     const cart = await Cart.findOne({userId:userId})
-    const bookDetails = await Book.findOne({_id:BookId})
+    const bookDetails = await Book.findOne({_id:BookId, quantity:{$gt:0}})
+    
+    if(!bookDetails) throw new Error("Book doesn't exist");
 
     if(!cart){
 
@@ -27,7 +30,11 @@ class CartService {
     }
 
     const book = cart.books.findIndex((book) => book.bookId === BookId)
+
     if(book !== -1) {
+
+      if(cart.books[book].quantity+1>bookDetails.quantity) throw new Error("Out of Stock");
+
       const existData = await Cart.findOneAndUpdate(
         { userId: userId, "books.bookId": BookId },
         { $inc: {
@@ -40,9 +47,10 @@ class CartService {
         { new: true }
       )
       return existData
+      
     }
     else {
-      const existData = await Cart.findOneAndUpdate(
+      const newBook = await Cart.findOneAndUpdate(
         {userId: userId},
         {$inc: {
           totalQuantity: 1,
@@ -57,7 +65,7 @@ class CartService {
         }},
         { new: true }
       )
-      return existData
+      return newBook
     }
   };
 
