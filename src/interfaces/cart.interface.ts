@@ -8,5 +8,5 @@ export interface ICart extends Document {
   books: {
     bookId: string; 
     quantity: number;
-  }[]; // Because Array of book objects with bookId and quantity
+  }[];
 }

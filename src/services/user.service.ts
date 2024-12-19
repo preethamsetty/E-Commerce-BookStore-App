@@ -3,7 +3,6 @@ import { IUser } from '../interfaces/user.interface';
 import { sendResetEmail } from '../utils/emailService';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { query } from 'express';
 
 class UserService {
   
@@ -42,7 +41,7 @@ class UserService {
       throw new Error('Invalid email or password');
 
     // Generating Access Token
-    const accessToken = jwt.sign({user:{_id:user._id,email:user.email}},process.env.AUTH_SECRET_KEY,{expiresIn:'60s'});
+    const accessToken = jwt.sign({user:{_id:user._id, role: user.role, email:user.email}},process.env.AUTH_SECRET_KEY/* ,{expiresIn:'60s'} */);
     
     // Generating Refresh Token and saving in data base
     const refreshToken = jwt.sign({user:{ _id: user._id,email: user.email}}, process.env.REFRESH_SECRET_KEY);
@@ -69,13 +68,12 @@ class UserService {
   public resetPassword = async (body: any): Promise<void> => {
     if (!body.email) throw new Error('Invalid Token');
     await User.updateOne(
-      { email: body.body.email },
-      { $set: { password: await bcrypt.hash(body.body.password, 9) } }
+      { email: body.email },
+      { $set: { password: await bcrypt.hash(body.password, 9) } }
     );
-    console.log("resetToken:",body.query.resetToken)
   };
 
-//refreshToken usage
+  //refreshToken usage
   public refreshToken = async (id: string): Promise<string> => {
     const user = await User.findOne({ _id:id });
     if(user)

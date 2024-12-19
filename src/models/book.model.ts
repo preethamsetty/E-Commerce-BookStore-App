@@ -31,10 +31,9 @@ const bookSchema = new Schema(
       type: Number,
       required: true,
     },
-    admin_user_id: {
-      type: Schema.Types.ObjectId,
+    adminId: {
+      type: String,
       required: true,
-      ref: 'User', 
     },
   },
   {
