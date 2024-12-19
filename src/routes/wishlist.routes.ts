@@ -12,6 +12,8 @@ class whishlistRoutes {
     private routes = (): void => {
   
       this.router.post('/:BookId', authMiddleware(), this.WishlistController.addToWishlist);
+
+      this.router.get('', authMiddleware(), this.WishlistController.getWishlist);
       
     };
   
