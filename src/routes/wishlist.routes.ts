@@ -2,7 +2,7 @@ import express, { IRouter } from 'express';
 import WishlistController from "../controllers/wishlist.controller";
 import { authMiddleware } from '../middlewares/auth.middleware';
 
-class whishlistRoutes {
+class wishlistRoutes {
     private router = express.Router();
     private WishlistController = new WishlistController();
     constructor() {
@@ -22,4 +22,4 @@ class whishlistRoutes {
     };
   }
   
-  export default whishlistRoutes;
+  export default wishlistRoutes;
