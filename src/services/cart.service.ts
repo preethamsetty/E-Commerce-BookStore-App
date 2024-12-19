@@ -171,6 +171,20 @@ public removeItem = async (body: { userId: string }, bookId: string): Promise<IC
     
   };
 
+  public getCart = async (userId: string): Promise<ICart | null> => {
+    // const userExists = await Cart.findOne({userId});
+
+    // if (!userExists) throw new Error("User doesn't exist in Cart");
+
+    // // const cart = await Cart.findOne();
+
+    // return userExists;
+
+    const cart = await Cart.findOne({userId:userId });
+    if (!cart) throw new Error("User doesn't have Cart");
+    return cart
+  }
+
 }
 
 export default CartService;

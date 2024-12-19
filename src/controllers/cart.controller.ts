@@ -95,6 +95,24 @@ class CartController {
       })
     }
   }
+  // Get Cart
+  public getCart = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { userId } = req.body;
+      const data = await this.CartService.getCart(userId);
+      res.status(HttpStatus.OK).json({
+        code : HttpStatus.OK,
+        data : data ,
+        message: "Cart Details",
+      });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        error: error.message,
+      });
+    }
+  };
 }
+
 
 export default CartController;

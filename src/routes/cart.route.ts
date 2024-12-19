@@ -18,6 +18,8 @@ class CartRoutes {
     
     this.router.delete('/:UserId', authMiddleware(), this.CartController.deleteCart);
 
+    this.router.get('/:UserId', authMiddleware(), this.CartController.getCart);
+
   };
 
   public getRoutes = (): IRouter => {
