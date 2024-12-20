@@ -15,9 +15,7 @@ class ordersRoutes {
 
     this.router.post('', authMiddleware(), this.OrderController.orderCart);
 
-    this.router.get('/:userId', authMiddleware(), this.OrderController.getOrder);
-
-
+    this.router.get('', authMiddleware(), this.OrderController.getOrder);
    
   };
 

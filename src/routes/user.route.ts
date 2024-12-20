@@ -25,7 +25,7 @@ class UserRoutes {
    this.router.post('/login',this.UserValidator.loginUser, this.UserController.loginUser);
     
    //ForgotPassword
-   this.router.post('/forgot-password', this.UserValidator.validateEmail, this.UserController.forgotPassword); 
+   this.router.post('/forgotpassword', this.UserValidator.validateEmail, this.UserController.forgotPassword); 
     
    //route to refreshToken
    this.router.get('', authMiddleware(), this.UserValidator.id, this.UserController.refreshtoken)

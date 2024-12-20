@@ -14,11 +14,11 @@ class CartRoutes {
     
     this.router.delete('/:BookId', authMiddleware(), this.CartController.removeItem);
 
-    this.router.put('/:BookId/', authMiddleware(), this.CartController.updateQuantity);
+    this.router.put('/:BookId', authMiddleware(), this.CartController.updateQuantity);
     
-    this.router.delete('/:UserId', authMiddleware(), this.CartController.deleteCart);
+    this.router.delete('', authMiddleware(), this.CartController.deleteCart);
 
-    this.router.get('/:UserId', authMiddleware(), this.CartController.getCart);
+    this.router.get('', authMiddleware(), this.CartController.getCart);
 
   };
 

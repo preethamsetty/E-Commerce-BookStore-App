@@ -31,8 +31,7 @@ class OrderController {
         // Get orders
         public getOrder = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
             try {
-                const userId = req.params.userId;
-                const orders = await this.OrderService.getOrder(userId);
+                const orders = await this.OrderService.getOrder(req.body.userId);
                 res.status(HttpStatus.OK).json({
                 code: HttpStatus.OK,
                 data: orders,
