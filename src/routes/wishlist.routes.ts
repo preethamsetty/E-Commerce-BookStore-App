@@ -12,6 +12,7 @@ class whishlistRoutes {
     private routes = (): void => {
   
       this.router.post('/:BookId', authMiddleware(), this.WishlistController.addToWishlist);
+      this.router.delete('/:BookId', authMiddleware(), this.WishlistController.removeToWishlist);
       
     };
   

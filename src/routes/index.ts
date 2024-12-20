@@ -15,7 +15,7 @@ const routes = (): IRouter => {
 
   router.use('/cart', new cartRoute().getRoutes());
 
-  router.use('/whishlist', new whishlistRoutes().getRoutes());
+  router.use('/wishlist', new whishlistRoutes().getRoutes());
 
   return router;
   

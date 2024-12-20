@@ -42,6 +42,37 @@ class WishlistService {
       
         return wishlist;
       };
+
+    public removeToWishlist =  async (userId: string, bookId: string): Promise<IWishList | void> => {
+    
+      try {
+        // Find the wishlist by userId
+        let wishList = await Wishlist.findOne({ userId: userId });
+        console.log(wishList);
+    
+        if (!wishList) {
+          throw new Error("WishList does not exist!");
+        }
+    
+        // Check if the book already exists in the wishlist
+        const existingBook = wishList.books.find((book) => book.bookId === bookId);
+        console.log(existingBook);
+    
+        if (existingBook) {
+          // Remove the book from the books array
+          wishList.books = wishList.books.filter((book) => book.bookId !== bookId);
+          console.log('Updated WishList books', wishList.books);
+    
+          // Save the updated wishlist
+          await wishList.save();
+    
+        } else {
+          throw new Error("WishList book does not exist!");
+        }
+      } catch (error) {
+        throw new Error(error);
+      }
+    };
       
 }
 
