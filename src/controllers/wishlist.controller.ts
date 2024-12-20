@@ -25,6 +25,27 @@ class WishlistController {
     }
   };
 
+  public removeToWishlist = async (req: Request, res: Response): Promise<void> =>  {
+    try {
+      const { BookId } = req.params; 
+      const { userId } = req.body; 
+  
+      const wishlist = await this.wishlistService.removeToWishlist(userId, BookId);
+  
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        message: 'Book Removed From wishlist successfully',
+        data: wishlist,
+      });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        message: error.message,
+      });
+    }
+
+  };
+
   // Get Wishlist
   public getWishlist = async (req: Request, res: Response): Promise<void> => {
     try {

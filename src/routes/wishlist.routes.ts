@@ -13,6 +13,8 @@ class wishlistRoutes {
   
       this.router.post('/:BookId', authMiddleware(), this.WishlistController.addToWishlist);
 
+      this.router.delete('/:BookId', authMiddleware(), this.WishlistController.removeToWishlist);
+
       this.router.get('', authMiddleware(), this.WishlistController.getWishlist);
       
     };
