@@ -73,6 +73,17 @@ class WishlistService {
         throw new Error(error);
       }
     };
+
+    // Get Wishlist
+    public getWishlist = async (userId: string) => {
+      const wishlist = await Wishlist.findOne({ userId: userId });
+  
+      if (!wishlist) {
+        throw new Error("Wishlist not found");
+      }
+  
+      return wishlist;
+      };
       
 }
 

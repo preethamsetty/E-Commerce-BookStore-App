@@ -2,7 +2,7 @@ import express, { IRouter } from 'express';
 import WishlistController from "../controllers/wishlist.controller";
 import { authMiddleware } from '../middlewares/auth.middleware';
 
-class whishlistRoutes {
+class wishlistRoutes {
     private router = express.Router();
     private WishlistController = new WishlistController();
     constructor() {
@@ -12,7 +12,10 @@ class whishlistRoutes {
     private routes = (): void => {
   
       this.router.post('/:BookId', authMiddleware(), this.WishlistController.addToWishlist);
+
       this.router.delete('/:BookId', authMiddleware(), this.WishlistController.removeToWishlist);
+
+      this.router.get('', authMiddleware(), this.WishlistController.getWishlist);
       
     };
   
@@ -21,4 +24,4 @@ class whishlistRoutes {
     };
   }
   
-  export default whishlistRoutes;
+  export default wishlistRoutes;

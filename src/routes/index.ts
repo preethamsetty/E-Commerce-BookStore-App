@@ -2,7 +2,9 @@ import express, { IRouter } from 'express';
 import userRoute from './user.route';
 import bookRoute from './book.route';
 import cartRoute from './cart.route';
-import whishlistRoutes from './wishlist.routes';
+import wishlistRoutes from './wishlist.routes';
+import ordersRoutes from './order.route';
+
 const router = express.Router();
 
 const routes = (): IRouter => {
@@ -15,8 +17,10 @@ const routes = (): IRouter => {
 
   router.use('/cart', new cartRoute().getRoutes());
 
-  router.use('/wishlist', new whishlistRoutes().getRoutes());
+  router.use('/wishlist', new wishlistRoutes().getRoutes());
 
+  router.use('/orders', new ordersRoutes().getRoutes());
+ 
   return router;
   
 };
