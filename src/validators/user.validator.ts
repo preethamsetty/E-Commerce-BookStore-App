@@ -1,72 +1,72 @@
-import Joi from '@hapi/joi';
 import { Request, Response, NextFunction } from 'express';
-import HttpStatus from 'http-status-codes'
-class userValidator {
+import { body, param ,validationResult} from 'express-validator';
+import HttpStatus from 'http-status-codes';
+
+class UserValidator {
 
   // validate user registration data
-  public registerUser = (req: Request, res: Response, next: NextFunction): void => {
-    const schema = Joi.object({
-      firstName: Joi.string().required(),
-      lastName: Joi.string().required(),
-      email: Joi.string().email().required(),
-      password: Joi.string().min(6).required(),
-    });
-
-    const { error } = schema.validate(req.body);
-    if (error)
-      res.status(HttpStatus.BAD_REQUEST).json({Code:400, Error: error.message})
-    else
+  public registerUser = [
+    body('firstName').isString().notEmpty(),
+    body('lastName').isString().notEmpty(),
+    body('email').isEmail(),
+    body('password').isLength({ min: 6 }),
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(HttpStatus.BAD_REQUEST).json({ Code: 400, Error: errors.array() });
+      }
       next();
-  };
+    }
+  ];
 
   // validate user login data
-  public loginUser = (req: Request, res: Response, next: NextFunction): void => {
-    const schema = Joi.object({
-      email: Joi.string().email().required(),
-      password: Joi.string().min(6).required(),
-    });
-
-    const { error } = schema.validate(req.body);
-    if (error)
-      res.status(HttpStatus.BAD_REQUEST).json({Code:400, Error: error.message})
-    else
+  public loginUser = [
+    body('email').isEmail(),
+    body('password').isLength({ min: 6 }),
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(HttpStatus.BAD_REQUEST).json({ Code: 400, Error: errors.array() });
+      }
       next();
-  };
+    }
+  ];
 
   // validate only email
-  public validateEmail = (req: Request, res: Response, next: NextFunction): void => {
-    const schema = Joi.object({
-      email: Joi.string().email().required(),
-    });
-
-    const { error } = schema.validate(req.body);
-    if (error)
-      res.status(HttpStatus.BAD_REQUEST).json({Code:400, Error: error.message})
-    else
+  public validateEmail = [
+    body('email').isEmail(),
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(HttpStatus.BAD_REQUEST).json({ Code: 400, Error: errors.array() });
+      }
       next();
-  };
+    }
+  ];
 
   // validate reset password
-  public resetPassword = (req: Request, res: Response, next: NextFunction): void => {
-    const schema = Joi.object({
-      password: Joi.string().min(6).required(),
-    });
-
-    const { error } = schema.validate(req.body);
-    if (error)
-      res.status(HttpStatus.BAD_REQUEST).json({Code:400, Error: error.message})
-    else
+  public resetPassword = [
+    body('password').isLength({ min: 6 }),
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(HttpStatus.BAD_REQUEST).json({ Code: 400, Error: errors.array() });
+      }
       next();
-  };
+    }
+  ];
 
-  public id = (req: Request, res: Response, next: NextFunction): void => {
-    const schema = Joi.string().regex(/^[0-9a-fA-F]{24}$/).required();
-    const { error } = schema.validate(req.body.userId);
-    if (error)
-      res.status(HttpStatus.BAD_REQUEST).json({Code:400, Error: error.message})
-    else
+  // validate user ID
+  public id = [
+    param('userId').isMongoId(),
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(HttpStatus.BAD_REQUEST).json({ Code: 400, Error: errors.array() });
+      }
       next();
-  };
+    }
+  ];
 }
 
-export default userValidator;
+export default UserValidator;
