@@ -26,13 +26,16 @@ class BookService {
       return book
   };
   
-  // Get all user books
-  public getBooks = async (): Promise<IBook[]> => {
-    const allBooks= await Book.find();
-    if(allBooks.length===0)
-        throw new Error("No Books Present")
-    else
-        return allBooks
+  //Get Books
+    public getBooks = async (page: number, limit: number): Promise<IBook[]> => {
+      const skip = (page - 1) * limit;
+      const books = await Book.find().skip(skip).limit(limit);
+
+          if (books.length === 0) {
+            throw new Error("No Books Present");
+          } else {
+            return books;
+    }
   };
 
   //update book by Id
