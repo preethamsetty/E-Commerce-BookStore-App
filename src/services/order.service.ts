@@ -48,6 +48,20 @@ class OrderService {
         return createdData;
 
     };
+
+
+    public getOrder = async (userId: string): Promise<IOrder[]> => {
+        const orders = await Order.find({ userId });
+    
+        if (!orders.length) {
+            // throw new Error('No orders found for this user');
+            return []
+        }
+    
+        return orders;
+    };
+    
+    
       
 }
 

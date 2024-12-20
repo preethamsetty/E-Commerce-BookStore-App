@@ -27,6 +27,25 @@ class OrderController {
         }
     };
 
-}
+
+        // Get orders
+        public getOrder = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+            try {
+                const userId = req.params.userId;
+                const orders = await this.OrderService.getOrder(userId);
+                res.status(HttpStatus.OK).json({
+                code: HttpStatus.OK,
+                data: orders,
+            });
+        } catch (error) {
+            res.status(HttpStatus.BAD_REQUEST).json({
+            code: HttpStatus.BAD_REQUEST,
+            error: error.message,
+        });
+    }
+};
+    };
+
+
 
 export default OrderController;
