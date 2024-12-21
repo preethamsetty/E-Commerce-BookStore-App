@@ -26,8 +26,6 @@ class BookController{
       }
   };
 
-
-    
     //Get Book by id
     public  getBook = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
@@ -45,29 +43,28 @@ class BookController{
               });
             }
       };
+
   
-  //Get All Books 
-  public getBooks = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const data = await this.BookService.getBooks();
-  
-      // Cache the fetched books data
-      await redisClient.setEx('books', 3600, JSON.stringify(data));
-  
-      res.status(HttpStatus.OK).json({
-        code: HttpStatus.OK,
-        data,
-        message: 'Books fetched successfully',
-      });
-    } catch (error) {
-      res.status(HttpStatus.BAD_REQUEST).json({
-        code: HttpStatus.BAD_REQUEST,
-        error: error.message,
-      });
+      //Get Books
+      public getBooks = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { page, limit } = req.query;
+          try {
+            const data = await this.BookService.getBooks(Number(page), Number(limit));
+            // Cache the fetched books data
+            await redisClient.setEx('books', 3600, JSON.stringify(data));
+            res.status(HttpStatus.OK).json({
+            code: HttpStatus.OK,
+            data,
+            message: 'Books fetched successfully'
+          });
+      } catch (error) {
+          res.status(HttpStatus.BAD_REQUEST).json({
+          code: HttpStatus.BAD_REQUEST,
+          Error: error.message,
+        });
     }
-  };
-  
-  
+};
+
   //Upadate By Id
   public updateBookInfoById = async(req:Request, res:Response ,next:NextFunction):Promise<void> =>{
     const bookId = req.params.id;

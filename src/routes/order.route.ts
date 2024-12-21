@@ -16,10 +16,8 @@ class ordersRoutes {
 
     this.router.post('', authMiddleware(),this.OrderController.orderCart);
 
-    this.router.get('/:userId', authMiddleware(),cacheMiddleware('order'),this.OrderController.getOrder);
+    this.router.get('', authMiddleware(),cacheMiddleware('order'),this.OrderController.getOrder);
 
-
-   
   };
 
   public getRoutes = (): IRouter => {

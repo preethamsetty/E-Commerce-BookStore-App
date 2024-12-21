@@ -1,10 +1,29 @@
-import { Request, Response, NextFunction } from 'express';
-import  CustomerDetailsService  from '../services/customerDetails.service';
-import HttpStatus from 'http-status-codes';
+import { Request, Response } from "express";
+import HttpStatus from "http-status-codes";
+import CustomerDetailsService from "../services/customerDetails.service";
 
 class CustomerDetailsController {
-    private CustomerDetailsService = new CustomerDetailsService();
+  public customerDetailsService = new CustomerDetailsService();
 
+  public addCustomer = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const customerData = req.body;
+
+      const customerDetails = await this.customerDetailsService.createCustomerDetails(customerData);
+
+      res.status(HttpStatus.CREATED).json({
+        code: HttpStatus.CREATED,
+        message: "Customer Details added successfully",
+        data: customerDetails,
+      });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        message: error.message,
+      });
+    }
+  };
+  
     public getCustomerDetails =async(
         req: Request, 
         res: Response,
@@ -26,9 +45,8 @@ class CustomerDetailsController {
                     message: error.message || 'An error occurred',
                 });
             }
-        }
-
-    public updateCustomerDetails = async(
+        };
+  public updateCustomerDetails = async(
     req: Request, 
     res: Response,
     next: NextFunction
@@ -49,7 +67,8 @@ class CustomerDetailsController {
                 message: error.message || 'An error occurred',
             });
         }
-    } 
+    } ;
 }
 
 export default CustomerDetailsController;
+

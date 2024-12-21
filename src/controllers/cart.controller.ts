@@ -96,15 +96,18 @@ class CartController {
     }
   }
   // Get Cart
-  public getCart = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public getCart = async (
+    req: Request, 
+    res: Response, 
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      const { userId } = req.body;
-      const data = await this.CartService.getCart(userId);
-  
+      
+      const data = await this.CartService.getCart(req.body.userId);
       // Cache the cart data
       const cacheKey = `cart:${userId}`;
       await redisClient.setEx(cacheKey, 3600, JSON.stringify(data));
-  
+      
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
         data: data,
