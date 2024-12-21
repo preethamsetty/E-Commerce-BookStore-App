@@ -26,7 +26,11 @@ const userSchema = new Schema(
     role:{
       type:String,
       enum: ['user', 'admin'], 
-    }
+    },
+    profilePicture: {
+      type: String, 
+      default: ''
+    },
   },
   {
     timestamps: true
