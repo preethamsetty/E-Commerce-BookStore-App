@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import HttpStatus from "http-status-codes";
 import WishlistService from "../services/wishlist.service";
+import redisClient from "../config/redisClient";
 
 class WishlistController {
   public wishlistService = new WishlistService();
@@ -50,9 +51,12 @@ class WishlistController {
   public getWishlist = async (req: Request, res: Response): Promise<void> => {
     try {
       const { userId } = req.body;
-
       const wishlist = await this.wishlistService.getWishlist(userId);
-
+  
+      // Cache the wishlist data
+      const cacheKey = `wishlist:${userId}`;
+      await redisClient.setEx(cacheKey, 3600, JSON.stringify(wishlist));
+  
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
         message: "Wishlist retrieved successfully",
@@ -65,6 +69,7 @@ class WishlistController {
       });
     }
   };
+  
 }
 
 export default WishlistController;

@@ -4,6 +4,7 @@ import { authMiddleware } from '../middlewares/auth.middleware';
 
 class CustomerDetailsRoutes {
   private router = express.Router();
+
   private customerDetailsController = new CustomerDetailsController();
 
   constructor() {
@@ -11,9 +12,14 @@ class CustomerDetailsRoutes {
   }
 
   private routes = (): void => {
-
-    // Add customer details
+    
+     // Add customer details
     this.router.post('',  authMiddleware(),this.customerDetailsController.addCustomer);
+    // Get customer Details
+    this.router.get('', authMiddleware(),this.CustomerDetailsController.getCustomerDetails);
+    //Update customer Details
+    this.router.put('/:BookId', authMiddleware(), this.CustomerDetailsController.updateCustomerDetails);
+
   };
 
   public getRoutes = (): IRouter => {
@@ -22,3 +28,4 @@ class CustomerDetailsRoutes {
 }
 
 export default CustomerDetailsRoutes;
+
