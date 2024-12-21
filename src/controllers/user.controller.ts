@@ -102,6 +102,29 @@ class UserController {
       });
     }
   };
+  //update the user details along with Profile Image
+  public updateUser = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { firstName, lastName } = req.body;
+      const updateData = {
+        ...(firstName && { firstName }),
+        ...(lastName && { lastName }),
+      };
+      const updatedUser = await this.UserService.updateUser(req.params.userId, updateData, req.file?.path);
+      
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        data: updatedUser,
+        message: 'User updated successfully',
+      });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        message: error.message,
+      });
+    }
+  };
+  
 }
 
 export default UserController;

@@ -3,6 +3,7 @@ import { IUser } from '../interfaces/user.interface';
 import { sendResetEmail } from '../utils/emailService';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { uploadImage } from '../utils/cloudinaryService';
 
 class UserService {
   
@@ -83,6 +84,32 @@ class UserService {
     return jwt.sign({user:{ _id: user._id, role: user.role, email: user.email}}, process.env.AUTH_SECRET_KEY, {expiresIn:'30m'});
     
   };
+
+  //update the user details along with Profile Image
+  public async updateUser(id: string, updateData: any, filePath?: any): Promise<any> {
+    let profilePicture = '';
+
+    // If an image is uploaded, upload it to Cloudinary
+    if (filePath) {
+      const result = await uploadImage(filePath);
+      profilePicture = result.secure_url;
+    }
+    // Update user details
+    const updatedUser = await User.findByIdAndUpdate(
+      id ,
+      {
+        ...updateData,
+        ...(profilePicture && { profilePicture }),
+      },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      throw new Error('User not found');
+    }
+
+    return updatedUser;
+  }
 }
 
 export default UserService;
