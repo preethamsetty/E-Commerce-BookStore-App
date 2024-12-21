@@ -1,64 +1,70 @@
-import User from "../models/user.model";
-import Order from "../models/order.model";
-import Book from "../models/book.model";
-import CartService from "./cart.service";
-import Cart from "../models/cart.model";
-import { IOrder } from "../interfaces/order.interface";
+import User from '../models/user.model';
+import Order from '../models/order.model';
+import Book from '../models/book.model';
+import CartService from './cart.service';
+import Cart from '../models/cart.model';
+import { IOrder } from '../interfaces/order.interface';
 
 class OrderService {
+  private cartService = new CartService();
 
-    private cartService = new CartService();
+  public orderCart = async (
+    userId: string
+  ): Promise<IOrder> => {
+    const isUser = await User.findById(userId);
 
-    public orderCart = async ( userId: string ): Promise<IOrder> => {
+    if (!isUser) throw new Error('User doesnt exist');
 
-        const isUser = await User.findById(userId);
+    const cart = await Cart.findOne({ userId: userId });
 
-        if(!isUser) throw new Error("User doesn't exist");
+    if (!cart) throw new Error('No items to order yet');
 
-        const cart = await Cart.findOne({userId:userId})
-        
-        if(!cart) throw new Error("No items to order yet");
-        
-        const cartDetails = await this.cartService.getCart(userId);
-        let checkStock = await Promise.all(
-            cartDetails.books.map( (data) => Book.findOne(
-                { _id: data.bookId, quantity: { $lt: data.quantity } },
-                { _id: true }
-              )
-            )
-        );
-          
-        checkStock = checkStock.filter((book) => book !== undefined && book !== null);
+    const cartDetails = await this.cartService.getCart(userId);
+    let checkStock = await Promise.all(
+      cartDetails.books.map((data) =>
+        Book.findOne(
+          { _id: data.bookId, quantity: { $lt: data.quantity } },
+          { _id: true },
+        ),
+      ),
+    );
 
-        if(checkStock.length>0) throw new Error(`${checkStock} are out of stock`)
+    checkStock = checkStock.filter(
+      (book) => book !== undefined && book !== null,
+    );
 
-        const createdData : IOrder = await Order.create({
-            userId: userId,
-            cart:{
-                totalPrice: cartDetails.totalPrice,
-                totalDiscountPrice: cartDetails.totalDiscountPrice,
-                totalQuantity: cartDetails.totalQuantity,
-                books: cartDetails.books
-            }
-        });
+    if (checkStock.length > 0)
+      throw new Error(`${checkStock} are out of stock`);
 
-        createdData.cart.books.map(async(data)=> await Book.updateOne({_id:data.bookId}, {$inc:{quantity: -data.quantity}}))
-        await this.cartService.deleteCart(userId)
+    const createdData: IOrder = await Order.create({
+      userId: userId,
+      cart: {
+        totalPrice: cartDetails.totalPrice,
+        totalDiscountPrice: cartDetails.totalDiscountPrice,
+        totalQuantity: cartDetails.totalQuantity,
+        books: cartDetails.books,
+      },
+    });
 
-        return createdData;
+    createdData.cart.books.map(
+      async (data) =>
+        await Book.updateOne(
+          { _id: data.bookId },
+          { $inc: { quantity: -data.quantity } },
+        ),
+    );
+    await this.cartService.deleteCart(userId);
 
-    };
+    return createdData;
+  };
 
+  public getOrder = async (
+    userId: string
+  ): Promise<IOrder[]> => {
+    const orders = await Order.find({ userId });
 
-    public getOrder = async (userId: string): Promise<IOrder[]> => {
-        const orders = await Order.find({ userId });
-    
-        return orders.length ? orders : []
-
-    };
-    
-    
-      
+    return orders.length ? orders : [];
+  };
 }
 
 export default OrderService;

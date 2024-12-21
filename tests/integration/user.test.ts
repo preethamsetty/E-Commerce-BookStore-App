@@ -1,19 +1,20 @@
 import { expect } from 'chai';
 import request from 'supertest';
 import mongoose from 'mongoose';
-
+import dotenv from 'dotenv';
+dotenv.config();
 import app from '../../src/index';
 
 describe('User APIs Test', () => {
   before((done) => {
     const clearCollections = () => {
       for (const collection in mongoose.connection.collections) {
-        mongoose.connection.collections[collection].deleteOne(() => {});
+        mongoose.connection.collections[collection].deleteOne({});
       }
     };
 
     const mongooseConnect = async () => {
-      await mongoose.connect(process.env.DATABASE_TEST);
+      await mongoose.connect(process.env.DATABASE_TEST as string);
       clearCollections();
     };
 

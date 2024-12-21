@@ -23,7 +23,8 @@ class App {
   private logger = Logger.logger;
   public errorHandler = new ErrorHandler();
 
-  constructor() {
+  constructor() {                                                                                   
+
     this.app = express();
     this.host = process.env.APP_HOST;
     this.port = process.env.APP_PORT;
@@ -61,7 +62,7 @@ class App {
   public startApp(): void {
     this.app.listen(this.port, () => {
       this.logger.info(
-        `Server started at ${this.host}:${this.port}/api/${this.api_version}/`
+        `Server started at ${this.host}:${this.port}/api/${this.api_version}/`,
       );
     });
   }

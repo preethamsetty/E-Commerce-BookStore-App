@@ -3,7 +3,6 @@ import userService from '../services/user.service';
 import { Request, Response, NextFunction } from 'express';
 import { IUser } from '../interfaces/user.interface';
 
-
 class UserController {
   public UserService = new userService();
 
@@ -11,13 +10,13 @@ class UserController {
   public registerUser = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
-      await this.UserService.registerUser(req.body as IUser); 
+      await this.UserService.registerUser(req.body as IUser);
       res.status(HttpStatus.CREATED).json({
         code: HttpStatus.CREATED,
-        message: 'User registered successfully'
+        message: 'User registered successfully',
       });
     } catch (error) {
       next(error);
@@ -28,77 +27,88 @@ class UserController {
   public registerAdmin = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
-      await this.UserService.registerUser(req.body as IUser, 'admin'); 
+      await this.UserService.registerUser(req.body as IUser, 'admin');
       res.status(HttpStatus.CREATED).json({
         code: HttpStatus.CREATED,
-        message: 'Admin registered successfully'
+        message: 'Admin registered successfully',
       });
     } catch (error) {
       next(error);
     }
   };
 
+  // Log in user
+  public loginUser = async (
+    req: Request,
+    res: Response
+  ): Promise<void> => {
+    try {
+      const { accessToken, refreshToken, email } =
+        await this.UserService.loginUser(req.body);
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        data: { email, accessToken, refreshToken },
+        message: 'Log in successful',
+      });
+    } catch (error) {
+      res.status(HttpStatus.UNAUTHORIZED).send(error.message);
+    }
+  };
 
- // Log in user
- public loginUser = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
-  try {
-    const {  accessToken,refreshToken, email} = await this.UserService.loginUser(req.body);
-    res.status(HttpStatus.OK).json({
-      code: HttpStatus.OK,
-      data: { email , accessToken, refreshToken}, 
-      message: 'Log in successful'
-    });
-  } catch (error) {
-    res.status(HttpStatus.UNAUTHORIZED).send(error.message);
-  }
-};
-
-//Forgot Password
-  public forgotPassword = async(req:Request, res:Response)=>{
-    try{
-      const {email} =req.body;
+  //Forgot Password
+  public forgotPassword = async (
+    req: Request,
+    res: Response,
+  ): Promise<void> => {
+    try {
+      const { email } = req.body;
       await this.UserService.forgotPassword(email);
       res.status(HttpStatus.OK).json({
-        code:HttpStatus.OK,
-        message:'Reset token sent to email successfully'
+        code: HttpStatus.OK,
+        message: 'Reset token sent to email successfully',
       });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).send({ message: error.message });
     }
-    catch(error){
-       res.status(HttpStatus.BAD_REQUEST).send({ message: error.message });
-    }
-  };  
+  };
 
-// Reset User password
-  public resetPassword = async (req: Request, res: Response): Promise<any> => {
+  // Reset User password
+  public resetPassword = async (
+    req: Request,
+    res: Response
+  ): Promise<void> => {
     try {
       await this.UserService.resetPassword(req.body);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
         data: `Password updated successfully for ${req.body.email}, you 
-               can login through your updated password`
+               can login through your updated password`,
       });
     } catch (error) {
       res.status(HttpStatus.BAD_REQUEST).json({
         code: HttpStatus.BAD_REQUEST,
-        message: `${error.message}`
+        message: `${error.message}`,
       });
     }
   };
 
-  public refreshtoken = async (req: Request, res: Response): Promise<any> => {
+  public refreshtoken = async (
+    req: Request,
+    res: Response
+  ): Promise<void> => {
     try {
       const token = await this.UserService.refreshToken(req.body.userId);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
-        data: token
+        data: token,
       });
     } catch (error) {
       res.status(HttpStatus.BAD_REQUEST).json({
         code: HttpStatus.BAD_REQUEST,
-        message: `${error.message}`
+        message: `${error.message}`,
       });
     }
   };

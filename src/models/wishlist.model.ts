@@ -33,7 +33,7 @@ const wishListSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 wishListSchema.index({ userId: 1 }, { background: true });

@@ -5,7 +5,7 @@ import { cacheMiddleware } from '../middlewares/redis.middleware';
 
 class ordersRoutes {
   private OrderController = new OrderController();
- 
+
   private router = express.Router();
 
   constructor() {
@@ -13,11 +13,18 @@ class ordersRoutes {
   }
 
   private routes = () => {
+    this.router.post(
+      '',
+      authMiddleware(),
+      this.OrderController.orderCart
+    );
 
-    this.router.post('', authMiddleware(),this.OrderController.orderCart);
-
-    this.router.get('', authMiddleware(),cacheMiddleware('order'),this.OrderController.getOrder);
-
+    this.router.get(
+      '',
+      authMiddleware(),
+      cacheMiddleware('order'),
+      this.OrderController.getOrder,
+    );
   };
 
   public getRoutes = (): IRouter => {

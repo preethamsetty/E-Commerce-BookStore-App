@@ -4,26 +4,26 @@ import { ICart } from '../interfaces/cart.interface';
 const cartSchema = new Schema(
   {
     userId: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     totalPrice: {
-        type: Number,
-        default: 0, 
+      type: Number,
+      default: 0,
     },
     totalDiscountPrice: {
-        type: Number,
-        default: 0,
+      type: Number,
+      default: 0,
     },
     totalQuantity: {
-        type: Number,
-        default: 0, 
+      type: Number,
+      default: 0,
     },
     books: {
       type: [
         {
-            bookId: { type: String, required: true }, 
-            quantity: { type: Number, required: true },
+          bookId: { type: String, required: true },
+          quantity: { type: Number, required: true },
         },
       ],
       default: [],
@@ -31,7 +31,7 @@ const cartSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 cartSchema.index({ userId: 1 }, { background: true });
