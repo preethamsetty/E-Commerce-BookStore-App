@@ -1,6 +1,7 @@
 import express, { IRouter } from 'express';
 import WishlistController from "../controllers/wishlist.controller";
 import { authMiddleware } from '../middlewares/auth.middleware';
+import { cacheMiddleware } from '../middlewares/redis.middleware';
 
 class wishlistRoutes {
     private router = express.Router();
@@ -13,7 +14,9 @@ class wishlistRoutes {
   
       this.router.post('/:BookId', authMiddleware(), this.WishlistController.addToWishlist);
 
-      this.router.get('', authMiddleware(), this.WishlistController.getWishlist);
+      this.router.delete('/:BookId', authMiddleware(), this.WishlistController.removeToWishlist);
+
+      this.router.get('', authMiddleware(),cacheMiddleware('wishlist'),this.WishlistController.getWishlist);
       
     };
   

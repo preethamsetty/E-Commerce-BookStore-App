@@ -18,7 +18,7 @@ class BookService {
 };
 
   //get book by id
-  public getBookById = async (bookId: string): Promise<IBook | null> => {
+  public getBook = async (bookId: string): Promise<IBook | null> => {
     const book = await Book.findById(bookId); 
     if(!book)
       throw new Error("Book Not found")
@@ -26,13 +26,16 @@ class BookService {
       return book
   };
   
-  // Get all user books
-  public getBooks = async (): Promise<IBook[]> => {
-    const allBooks= await Book.find();
-    if(allBooks.length===0)
-        throw new Error("No Books Present")
-    else
-        return allBooks
+  //Get Books
+    public getBooks = async (page: number, limit: number): Promise<IBook[]> => {
+      const skip = (page - 1) * limit;
+      const books = await Book.find().skip(skip).limit(limit);
+
+          if (books.length === 0) {
+            throw new Error("No Books Present");
+          } else {
+            return books;
+    }
   };
 
   // Get all searched user books
