@@ -12,14 +12,13 @@ class CustomerDetailsRoutes {
   }
 
   private routes = (): void => {
-    
+
      // Add customer details
     this.router.post('',  authMiddleware(),this.customerDetailsController.addCustomer);
     // Get customer Details
     this.router.get('', authMiddleware(),this.customerDetailsController.getCustomerDetails);
     //Update customer Details
     this.router.put('', authMiddleware(), this.customerDetailsController.updateCustomerDetails);
-
   };
 
   public getRoutes = (): IRouter => {
@@ -28,4 +27,3 @@ class CustomerDetailsRoutes {
 }
 
 export default CustomerDetailsRoutes;
-

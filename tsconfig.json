@@ -8,7 +8,9 @@
     "esModuleInterop": true,
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
-    "types": ["node"]
+    "typeRoots": ["node_modules/@types", "node_modules"],
+    "types": ["dotenv"]
+    
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "src/tests"]
