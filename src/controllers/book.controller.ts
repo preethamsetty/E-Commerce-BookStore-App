@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import HttpStatus from 'http-status-codes';
+import redisClient from '../config/redisClient';
 import BookService from '../services/book.service';
 
 class BookController{
@@ -28,10 +29,10 @@ class BookController{
 
     
     //Get Book by id
-    public  getBookById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    public  getBook = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const bookId = req.params.id;
-            const data = await this.BookService.getBookById((bookId));
+            const data = await this.BookService.getBook((bookId));
                 res.status(HttpStatus.OK).json({
                     code: HttpStatus.OK,
                     message: 'Book fetched successfully',
@@ -46,22 +47,27 @@ class BookController{
       };
   
   //Get All Books 
-    public getBooks = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public getBooks = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
       const data = await this.BookService.getBooks();
-      try {
-        res.status(HttpStatus.OK).json({
-          code: HttpStatus.OK,
-          data,
-          message: 'Books fetched successfully'
-        });
-      } catch (error) {
-        res.status(HttpStatus.BAD_REQUEST).json({
-            code: HttpStatus.BAD_REQUEST,
-            Error: error.message,
-        });
-      }
-    };
-
+  
+      // Cache the fetched books data
+      await redisClient.setEx('books', 3600, JSON.stringify(data));
+  
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        data,
+        message: 'Books fetched successfully',
+      });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        error: error.message,
+      });
+    }
+  };
+  
+  
   //Upadate By Id
   public updateBookInfoById = async(req:Request, res:Response ,next:NextFunction):Promise<void> =>{
     const bookId = req.params.id;

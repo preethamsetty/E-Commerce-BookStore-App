@@ -18,7 +18,7 @@ class BookService {
 };
 
   //get book by id
-  public getBookById = async (bookId: string): Promise<IBook | null> => {
+  public getBook = async (bookId: string): Promise<IBook | null> => {
     const book = await Book.findById(bookId); 
     if(!book)
       throw new Error("Book Not found")

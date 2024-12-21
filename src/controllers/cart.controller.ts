@@ -1,7 +1,7 @@
 import HttpStatus from 'http-status-codes';
 import { Request, Response, NextFunction } from 'express';
 import CartService from '../services/cart.service';
-
+import redisClient from '../config/redisClient';
 
 class CartController {
   public CartService = new CartService();
@@ -100,9 +100,14 @@ class CartController {
     try {
       const { userId } = req.body;
       const data = await this.CartService.getCart(userId);
+  
+      // Cache the cart data
+      const cacheKey = `cart:${userId}`;
+      await redisClient.setEx(cacheKey, 3600, JSON.stringify(data));
+  
       res.status(HttpStatus.OK).json({
-        code : HttpStatus.OK,
-        data : data ,
+        code: HttpStatus.OK,
+        data: data,
         message: "Cart Details",
       });
     } catch (error) {
@@ -112,6 +117,7 @@ class CartController {
       });
     }
   };
+  
 }
 
 
