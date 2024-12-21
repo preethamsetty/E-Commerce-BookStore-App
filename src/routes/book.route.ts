@@ -19,6 +19,9 @@ class BookRoutes {
     // Getting all user books 
     this.router.get('', this.BookController.getBooks); 
 
+    // Route for sorting books by price
+    this.router.get("/sort",authMiddleware(), this.BookController.sortBooks);
+
     // Route to get a book by id
     this.router.get('/:id', this.BookController.getBookById);
 
@@ -30,6 +33,8 @@ class BookRoutes {
 
     // Delete book by id - Only admins
     this.router.delete('/:id', authMiddleware(), isAdmin, this.BookValidator.getBookById, this.BookController.deleteBook);
+
+
   };
 
   public getRoutes = (): IRouter => {
