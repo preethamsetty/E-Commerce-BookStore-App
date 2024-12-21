@@ -39,4 +39,6 @@ const orderSchema = new Schema(
     }
 );
 
+orderSchema.index({ userId: 1 }, { background: true });
+
 export default model<IOrder>('Order', orderSchema);

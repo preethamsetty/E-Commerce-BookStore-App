@@ -34,4 +34,6 @@ const cartSchema = new Schema(
   }
 );
 
+cartSchema.index({ userId: 1 }, { background: true });
+
 export default model<ICart>('Cart', cartSchema);
