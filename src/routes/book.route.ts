@@ -21,7 +21,7 @@ class BookRoutes {
     this.router.get('', cacheMiddleware('books'), this.BookController.getBooks); 
 
     // Getting all user books 
-    this.router.get('/search', this.BookController.getSearchedBooks);
+    this.router.get('/search/:page', this.BookController.getSearchedBooks);
 
     // get book by id - users/admins
     this.router.get('/:id', this.BookValidator.getBookById, this.BookController.getBook);
