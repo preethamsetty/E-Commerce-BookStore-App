@@ -41,4 +41,6 @@ const bookSchema = new Schema(
   }
 );
 
+bookSchema.index({ bookName: 'text' }, { background: true });
+
 export default model<IBook>('Book', bookSchema);
