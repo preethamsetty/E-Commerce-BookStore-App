@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import HttpStatus from 'http-status-codes';
+import redisClient from '../config/redisClient';
 import BookService from '../services/book.service';
 
 class BookController{
@@ -25,13 +26,11 @@ class BookController{
       }
   };
 
-
-    
     //Get Book by id
-    public  getBookById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    public  getBook = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const bookId = req.params.id;
-            const data = await this.BookService.getBookById((bookId));
+            const data = await this.BookService.getBook((bookId));
                 res.status(HttpStatus.OK).json({
                     code: HttpStatus.OK,
                     message: 'Book fetched successfully',
@@ -44,12 +43,14 @@ class BookController{
               });
             }
       };
-  
+
       //Get Books
       public getBooks = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { page, limit } = req.query;
           try {
             const data = await this.BookService.getBooks(Number(page), Number(limit));
+            // Cache the fetched books data
+            await redisClient.setEx('books', 3600, JSON.stringify(data));
             res.status(HttpStatus.OK).json({
             code: HttpStatus.OK,
             data,
@@ -63,6 +64,22 @@ class BookController{
     }
 };
 
+    //Get All Serched User Books 
+    public getSearchedBooks = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const data = await this.BookService.getSearchedBooks(req.query.searchQuery, req.params.page);
+      try {
+        res.status(HttpStatus.OK).json({
+          code: HttpStatus.OK,
+          data,
+          message: 'Books fetched successfully'
+        });
+      } catch (error) {
+        res.status(HttpStatus.BAD_REQUEST).json({
+            code: HttpStatus.BAD_REQUEST,
+            Error: error.message,
+        });
+      }
+    };
 
   //Upadate By Id
   public updateBookInfoById = async(req:Request, res:Response ,next:NextFunction):Promise<void> =>{

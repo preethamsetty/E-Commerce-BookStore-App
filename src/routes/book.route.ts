@@ -3,6 +3,7 @@ import BookController from '../controllers/book.controller';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import isAdmin from '../middlewares/role.middleware';
 import bookValidator from '../validators/book.validator';
+import { cacheMiddleware } from '../middlewares/redis.middleware';
 class BookRoutes {
   private router = express.Router();
   private BookController = new BookController();
@@ -17,13 +18,13 @@ class BookRoutes {
     this.router.post('', authMiddleware(), isAdmin, this.BookValidator.createBook, this.BookController.createBook);
 
     // Getting all user books 
-    this.router.get('', this.BookController.getBooks); 
+    this.router.get('', cacheMiddleware('books'), this.BookController.getBooks); 
 
-    // Route to get a book by id
-    this.router.get('/:id', this.BookController.getBookById);
+    // Getting all user books 
+    this.router.get('/search/:page', this.BookController.getSearchedBooks);
 
     // get book by id - users/admins
-    this.router.get('/:id', this.BookValidator.getBookById, this.BookController.getBookById);
+    this.router.get('/:id', this.BookValidator.getBookById, this.BookController.getBook);
 
     // Update book by id - Only admins
     this.router.put('/:id', authMiddleware(), isAdmin, this.BookValidator.getBookById, this.BookController.updateBookInfoById);
