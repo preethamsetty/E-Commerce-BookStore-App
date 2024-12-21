@@ -19,8 +19,8 @@ class BookRoutes {
     // Getting all user books 
     this.router.get('', this.BookController.getBooks); 
 
-    // Route to get a book by id
-    this.router.get('/:id', this.BookController.getBookById);
+    // Getting all user books 
+    this.router.get('/search', this.BookController.getSearchedBooks);
 
     // get book by id - users/admins
     this.router.get('/:id', this.BookValidator.getBookById, this.BookController.getBookById);
