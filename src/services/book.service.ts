@@ -39,11 +39,14 @@ class BookService {
   };
 
   // Get all searched user books
-  public getSearchedBooks = async (searchQuery: any): Promise<IBook[]> => {
+  public getSearchedBooks = async (searchQuery: any, page: any): Promise<IBook[]> => {
     
-    const searchedBooks = await Book.find({ $text: { $search: searchQuery } })
-    return searchedBooks.length ? searchedBooks : this.getBooks()
+    let searchedBooks = await Book.find({ $text: { $search: searchQuery } }).skip((page - 1) * 1).limit(16)
 
+    return searchedBooks.length
+            ? searchedBooks
+            : await Book.find({ bookName: { $regex: searchQuery, $options: 'i' } }).skip((page - 1) * 1).limit(16)
+    
   };
 
   //update book by Id

@@ -66,7 +66,7 @@ class BookController{
 
     //Get All Serched User Books 
     public getSearchedBooks = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const data = await this.BookService.getSearchedBooks(req.query.searchQuery);
+      const data = await this.BookService.getSearchedBooks(req.query.searchQuery, req.params.page);
       try {
         res.status(HttpStatus.OK).json({
           code: HttpStatus.OK,
