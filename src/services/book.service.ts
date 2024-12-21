@@ -38,6 +38,14 @@ class BookService {
     }
   };
 
+  // Get all searched user books
+  public getSearchedBooks = async (searchQuery: any): Promise<IBook[]> => {
+    
+    const searchedBooks = await Book.find({ $text: { $search: searchQuery } })
+    return searchedBooks.length ? searchedBooks : this.getBooks()
+
+  };
+
   //update book by Id
   public updateBookInfoById = async (bookId:string,updateData:Partial<IUser>): Promise<IBook | void> => {
     const book = await Book.findById(bookId);

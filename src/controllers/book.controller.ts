@@ -44,7 +44,6 @@ class BookController{
             }
       };
 
-  
       //Get Books
       public getBooks = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { page, limit } = req.query;
@@ -64,6 +63,23 @@ class BookController{
         });
     }
 };
+
+    //Get All Serched User Books 
+    public getSearchedBooks = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const data = await this.BookService.getSearchedBooks(req.query.searchQuery);
+      try {
+        res.status(HttpStatus.OK).json({
+          code: HttpStatus.OK,
+          data,
+          message: 'Books fetched successfully'
+        });
+      } catch (error) {
+        res.status(HttpStatus.BAD_REQUEST).json({
+            code: HttpStatus.BAD_REQUEST,
+            Error: error.message,
+        });
+      }
+    };
 
   //Upadate By Id
   public updateBookInfoById = async(req:Request, res:Response ,next:NextFunction):Promise<void> =>{
