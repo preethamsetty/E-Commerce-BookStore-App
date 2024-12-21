@@ -118,6 +118,36 @@ class BookController{
   } 
 };
 
+// Sort and Paginate Books by Price API
+public sortBooks = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const order = (req.query.order as string) || 'asc'; 
+    const page = parseInt(req.query.page as string) || 1; 
+    const limit = parseInt(req.query.limit as string) || 16; 
+
+    if (order !== 'asc' && order !== 'desc') {
+      res.status(400).json({
+        code: 400,
+        message: "Invalid 'order' value. Use 'asc' or 'desc'.",
+      });
+    }
+
+    const books = await this.BookService.sortBooks(order, page, limit);
+    res.status(200).json({
+      code: 200,
+      message: 'Books sorted successfully',
+      data: books.data,
+      pagination: books.pagination,
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      message: 'Failed to sort books',
+      error: error.message,
+    });
+  }
+};
+
 }
 
 export default BookController;

@@ -69,6 +69,34 @@ class BookService {
   }
 };
 
+// Sort and Paginate Books by Price API
+public sortBooks = async (order: string, page: number, limit: number): Promise<{ data: IBook[]; pagination: any }> => {
+  const sortOrder = order === 'asc' ? 1 : -1; 
+  const skip = (page - 1) * limit; 
+
+  const books = await Book.find()
+    .sort({ price: sortOrder })
+    .skip(skip)
+    .limit(limit);
+
+  const totalBooks = await Book.countDocuments();
+  const totalPages = Math.ceil(totalBooks / limit);
+
+  if (books.length === 0) {
+    throw new Error('No Books Present');
+  }
+
+  return {
+    data: books,
+    pagination: {
+      currentPage: page,
+      totalPages: totalPages,
+      totalBooks: totalBooks,
+      limitPerPage: limit,
+    },
+  };
+};
+
 }
 
 export default BookService;

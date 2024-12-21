@@ -1,4 +1,3 @@
-
 import { ICustomerDetails } from '../interfaces/customerDetails.interface';
 import CustomerDetails from '../models/customerDetails';
 import HttpStatus from 'http-status-codes';
