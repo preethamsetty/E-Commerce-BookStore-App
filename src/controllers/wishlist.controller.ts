@@ -11,11 +11,11 @@ class WishlistController {
     res: Response
   ): Promise<void> => {
     try {
-      const { BookId } = req.params;
-      const { userId } = req.body;
+      const wishlist = await this.wishlistService.addToWishlist(req.body.userId, req.params.BookId);
 
-      const wishlist = await this.wishlistService.addToWishlist(userId, BookId);
-
+      // Clear cache for the user's wishlist
+      await redisClient.del( `wishlist:${req.body.userId}`);
+  
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
         message: 'Book added to wishlist successfully',
@@ -34,13 +34,12 @@ class WishlistController {
     res: Response,
   ): Promise<void> => {
     try {
-      const { BookId } = req.params;
-      const { userId } = req.body;
+      const wishlist =
+      await this.wishlistService.removeToWishlist(req.body.userId, req.params.BookId);
+  
+      // Clear cache for the user's wishlist
+      await redisClient.del( `wishlist:${req.body.userId}`);
 
-      const wishlist = await this.wishlistService.removeToWishlist(
-        userId,
-        BookId,
-      );
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
         message: 'Book Removed From wishlist successfully',

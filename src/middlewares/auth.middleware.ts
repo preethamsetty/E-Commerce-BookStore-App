@@ -31,6 +31,10 @@ export const authMiddleware =
           req.body.email = decoded.user.email;
           req.body.role = decoded.user.role;
           req.body.userId = decoded.user._id;
+
+          if (decoded.user.role === 'admin') 
+            req.body.admin_user_id = decoded.user._id;
+          
         }
         next();
       }

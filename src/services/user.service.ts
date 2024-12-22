@@ -3,6 +3,7 @@ import { IUser } from '../interfaces/user.interface';
 import { sendResetEmail } from '../utils/emailService';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { uploadImage } from '../utils/cloudinaryService';
 
 class UserService {
   // Register user or admin
@@ -11,10 +12,7 @@ class UserService {
     role: 'user' | 'admin' = 'user',
   ): Promise<IUser> => {
     const existingUser = await User.findOne({ email: body.email });
-    if (existingUser) {
-      throw new Error(`${role === 'admin' ? 'Admin' : 'User'} already exists`);
-    }
-
+    if (existingUser) throw new Error(`${role === 'admin' ? 'Admin' : 'User'} already exists`);
     body.role = role;
 
     const hashedPassword = await bcrypt.hash(body.password, 10);
@@ -99,6 +97,34 @@ class UserService {
       { expiresIn: '30m' },
     );
   };
+
+  //update the user details along with Profile Image
+  public async updateUser(
+    id: string,
+    updateData: {firstName: string, lastName: string},
+    filePath?: any
+  ): Promise<any> {
+    let profilePicture = '';
+
+    // If an image is uploaded, upload it to Cloudinary
+    if (filePath) {
+      const result = await uploadImage(filePath);
+      profilePicture = result.secure_url;
+    }
+    // Update user details
+    const updatedUser = await User.findByIdAndUpdate(
+      id ,
+      {
+        ...updateData,
+        ...(profilePicture && { profilePicture }),
+      },
+      { new: true }
+    );
+
+    if (!updatedUser) throw new Error('User not found');
+    
+    return updatedUser;
+  }
 }
 
 export default UserService;

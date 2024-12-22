@@ -111,9 +111,7 @@ class CartService {
       return cart;
     }
 
-    if (quantityChange > 0 && newQuantity > bookDetails.quantity) {
-      throw new Error('Not enough stock available for this book');
-    }
+    if (quantityChange > 0 && newQuantity > bookDetails.quantity) throw new Error('Not enough stock available for this book');
 
     cart.books[bookIndex].quantity = newQuantity;
     cart.totalQuantity += quantityChange;
@@ -129,21 +127,15 @@ class CartService {
     bookId: string,
   ): Promise<ICart | undefined> => {
     const cart = await Cart.findOne({ userId: userId });
-    if (!cart) {
-      throw new Error('Cart not found');
-    }
+    if (!cart) throw new Error('Cart not found');
 
     const existingBook = cart.books.find(
       (book: { bookId: string }) => book.bookId === bookId,
     );
-    if (!existingBook) {
-      throw new Error('Book not found in cart');
-    }
+    if (!existingBook) throw new Error('Book not found in cart');
 
     const bookDetails = await Book.findById(bookId);
-    if (!bookDetails) {
-      throw new Error('Book details not found');
-    }
+    if (!bookDetails) throw new Error('Book details not found');
 
     let updatedBooks = cart.books.map(
       (book: { bookId: string; quantity: number }) => {

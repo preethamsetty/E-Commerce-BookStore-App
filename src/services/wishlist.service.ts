@@ -8,9 +8,7 @@ class WishlistService {
     bookId: string,
   ): Promise<IWishList> => {
     const bookDetails = await Book.findById(bookId);
-    if (!bookDetails) {
-      throw new Error('Book doesnt exist');
-    }
+    if (!bookDetails) throw new Error('Book doesnt exist');
 
     let wishlist = await Wishlist.findOne({ userId: userId });
 
@@ -40,9 +38,7 @@ class WishlistService {
           price: bookDetails.price,
         });
         await wishlist.save();
-      } else {
-        throw new Error('Book already in wishlist');
-      }
+      } else throw new Error('Book already in wishlist');
     }
 
     return wishlist;
@@ -57,9 +53,7 @@ class WishlistService {
       const wishList = await Wishlist.findOne({ userId: userId });
       console.log(wishList);
 
-      if (!wishList) {
-        throw new Error('WishList does not exist!');
-      }
+      if (!wishList) throw new Error('WishList does not exist!');
 
       // Check if the book already exists in the wishlist
       const existingBook = wishList.books.find(
@@ -76,9 +70,8 @@ class WishlistService {
 
         // Save the updated wishlist
         await wishList.save();
-      } else {
-        throw new Error('WishList book does not exist!');
-      }
+      } else  
+          throw new Error('WishList book does not exist!');
     } catch (error) {
       throw new Error(error);
     }
@@ -90,9 +83,7 @@ class WishlistService {
   ): Promise<IWishList> => {
     const wishlist = await Wishlist.findOne({ userId: userId });
 
-    if (!wishlist) {
-      throw new Error('Wishlist not found');
-    }
+    if (!wishlist) throw new Error('Wishlist not found'); 
 
     return wishlist;
   };

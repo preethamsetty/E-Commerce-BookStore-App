@@ -12,8 +12,7 @@ class CustomerDetailsController {
     try {
       const customerData = req.body;
 
-      const customerDetails =
-        await this.customerDetailsService.createCustomerDetails(customerData);
+      const customerDetails = await this.customerDetailsService.createCustomerDetails(customerData);
 
       res.status(HttpStatus.CREATED).json({
         code: HttpStatus.CREATED,
@@ -27,51 +26,46 @@ class CustomerDetailsController {
       });
     }
   };
-
-  public getCustomerDetails = async (
-    req: Request,
+  
+  public getCustomerDetails =async(
+    req: Request, 
     res: Response,
   ): Promise<void> => {
     try {
-      const { userId } = req.body;
-      const result = await this.customerDetailsService.getCustomerDetails(
-        userId,
-      );
-      res.status(result.code).json({
-        code: result.code,
-        data: result.data,
-        message: result.message,
-      });
+        const result = 
+        await this.customerDetailsService.getCustomerDetails(req.body.userId);
+        res.status(result.code).json({
+            code: result.code,
+            data: result.data,
+            message: result.message,
+        });
     } catch (error) {
-      console.error(error);
-      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        code: HttpStatus.INTERNAL_SERVER_ERROR,
-        data: null,
-        message: error.message || 'An error occurred',
-      });
+        console.error(error);
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+            code: HttpStatus.INTERNAL_SERVER_ERROR,
+            data: null,
+            message: error.message || 'An error occurred',
+        });
     }
   };
-  public updateCustomerDetails = async (
-    req: Request,
+  public updateCustomerDetails = async(
+    req: Request, 
     res: Response,
   ): Promise<void> => {
     try {
-      const { body, params } = req;
-      const result = await this.customerDetailsService.updateCustomerDetails(
-        body,
-        params.id,
-      );
+      const result = 
+      await this.customerDetailsService.updateCustomerDetails(req.body, req.params.id);
       res.status(result.code).json({
-        code: result.code,
-        data: result.data,
-        message: result.message,
+          code: result.code,
+          data: result.data,
+          message: result.message,
       });
-    } catch (error) {
+  } catch (error) {
       console.error(error);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        code: HttpStatus.INTERNAL_SERVER_ERROR,
-        data: null,
-        message: error.message || 'An error occurred',
+          code: HttpStatus.INTERNAL_SERVER_ERROR,
+          data: null,
+          message: error.message || 'An error occurred',
       });
     }
   };

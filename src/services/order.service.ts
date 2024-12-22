@@ -33,8 +33,7 @@ class OrderService {
       (book) => book !== undefined && book !== null,
     );
 
-    if (checkStock.length > 0)
-      throw new Error(`${checkStock} are out of stock`);
+    if (checkStock.length > 0) throw new Error(`${checkStock} are out of stock`);
 
     const createdData: IOrder = await Order.create({
       userId: userId,

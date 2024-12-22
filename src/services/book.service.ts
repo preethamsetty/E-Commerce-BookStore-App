@@ -28,12 +28,11 @@ class BookService {
     const skip = (page - 1) * limit;
     const books = await Book.find().skip(skip).limit(limit);
 
-    if (books.length === 0) {
-      throw new Error('No Books Present');
-    } else {
-      return books;
-    }
+  if (books.length === 0) throw new Error('No Books Present');
+
+  return books;
   };
+
 
   // Get all searched user books
   public getSearchedBooks = async (
@@ -57,11 +56,9 @@ class BookService {
     updateData: Partial<IUser>,
   ): Promise<IBook | void> => {
     const book = await Book.findById(bookId);
-    if (!book) {
-      throw new Error('Book Not Exit');
-    } else {
-      return await Book.findByIdAndUpdate(bookId, updateData, { new: true });
-    }
+    if (!book) throw new Error('Book Not Exit');
+
+    return await Book.findByIdAndUpdate(bookId, updateData, { new: true });
   };
 
   // Delete a book by id
@@ -69,10 +66,40 @@ class BookService {
     bookId: string
   ): Promise<void> => {
     const book = await Book.findByIdAndDelete(bookId);
-    if (!book) {
-      throw new Error('Book not found');
-    }
+    if (!book) throw new Error('Book not found');
+};
+
+// Sort and Paginate Books by Price API
+public sortBooks = async (
+  order: string,
+  page: number,
+): Promise<{ data: IBook[]; pagination: any }> => {
+  const sortOrder = order === 'asc' ? 1 : -1; 
+  const skip = (page - 1) * 16; 
+
+  const books = await Book.find()
+    .sort({ price: sortOrder })
+    .skip(skip)
+    .limit(16);
+
+  const totalBooks = await Book.countDocuments();
+  const totalPages = Math.ceil(totalBooks / 16);
+
+  if (books.length === 0) {
+    throw new Error('No Books Present');
+  }
+
+  return {
+    data: books,
+    pagination: {
+      currentPage: page,
+      totalPages: totalPages,
+      totalBooks: totalBooks,
+      limitPerPage: 16,
+    },
   };
+};
+
 }
 
 export default BookService;

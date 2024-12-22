@@ -31,7 +31,7 @@ const bookSchema = new Schema(
       type: Number,
       required: true,
     },
-    adminId: {
+    admin_user_id: {
       type: String,
       required: true,
     },

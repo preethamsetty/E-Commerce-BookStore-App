@@ -1,6 +1,6 @@
 import HttpStatus from 'http-status-codes';
 import userService from '../services/user.service';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { IUser } from '../interfaces/user.interface';
 
 class UserController {
@@ -10,7 +10,6 @@ class UserController {
   public registerUser = async (
     req: Request,
     res: Response,
-    next: NextFunction,
   ): Promise<void> => {
     try {
       await this.UserService.registerUser(req.body as IUser);
@@ -19,7 +18,10 @@ class UserController {
         message: 'User registered successfully',
       });
     } catch (error) {
-      next(error);
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        message: `${error.message}`,
+      });
     }
   };
 
@@ -27,7 +29,6 @@ class UserController {
   public registerAdmin = async (
     req: Request,
     res: Response,
-    next: NextFunction,
   ): Promise<void> => {
     try {
       await this.UserService.registerUser(req.body as IUser, 'admin');
@@ -36,7 +37,10 @@ class UserController {
         message: 'Admin registered successfully',
       });
     } catch (error) {
-      next(error);
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        message: `${error.message}`,
+      });
     }
   };
 
@@ -54,7 +58,10 @@ class UserController {
         message: 'Log in successful',
       });
     } catch (error) {
-      res.status(HttpStatus.UNAUTHORIZED).send(error.message);
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.UNAUTHORIZED,
+        message: `${error.message}`,
+      });
     }
   };
 
@@ -71,7 +78,10 @@ class UserController {
         message: 'Reset token sent to email successfully',
       });
     } catch (error) {
-      res.status(HttpStatus.BAD_REQUEST).send({ message: error.message });
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        message: `${error.message}`,
+      });
     }
   };
 
@@ -112,6 +122,33 @@ class UserController {
       });
     }
   };
+  //update the user details along with Profile Image
+  public updateUser = async (
+    req: Request,
+    res: Response
+  ): Promise<void> => {
+    try {
+      const { firstName, lastName } = req.body;
+      const updateData = {
+        ...(firstName && { firstName }),
+        ...(lastName && { lastName }),
+      };
+      const updatedUser =
+      await this.UserService.updateUser(req.params.userId, updateData, req.file?.path);
+      
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        data: updatedUser,
+        message: 'User updated successfully',
+      });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        message: error.message,
+      });
+    }
+  };
+  
 }
 
 export default UserController;
