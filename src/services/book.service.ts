@@ -26,17 +26,19 @@ class BookService {
       return book
   };
   
-  //Get Books
-    public getBooks = async (page: number, limit: number): Promise<IBook[]> => {
-      const skip = (page - 1) * limit;
-      const books = await Book.find().skip(skip).limit(limit);
+  // Get Books
+  public getBooks = async (page: number, limit: number): Promise<IBook[]> => {
+  const skip = (page - 1) * limit;
 
-          if (books.length === 0) {
-            throw new Error("No Books Present");
-          } else {
-            return books;
-    }
+  const books = await Book.find().skip(skip).limit(limit);
+
+  if (books.length === 0) {
+    throw new Error('No Books Present');
+  }
+
+  return books;
   };
+
 
   // Get all searched user books
   public getSearchedBooks = async (searchQuery: any, page: any): Promise<IBook[]> => {

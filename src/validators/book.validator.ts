@@ -11,7 +11,7 @@ class bookValidator {
     check('price').isNumeric().withMessage('Price must be a number.'),
     check('description').isString().notEmpty().withMessage('Description is required.'),
     check('discountPrice').isNumeric().withMessage('Discount price must be a number.'),
-    check('adminId').isString().notEmpty().withMessage('Admin ID is required.'),
+    check('admin_user_id').isString().notEmpty().withMessage('Admin ID is required.'),
     
     (req: Request, res: Response, next: NextFunction): void => {
       const errors = validationResult(req);
