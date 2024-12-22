@@ -12,6 +12,9 @@ class BookController{
           const bookData = req.body; // Book data from the request body
           const data = await this.BookService.createBook(bookData);
 
+           // Clear cache after book update
+            await redisClient.del(`books`);
+
           res.status(HttpStatus.CREATED).json({
               code: HttpStatus.CREATED,
               message: 'Book created successfully',
@@ -31,10 +34,12 @@ class BookController{
         try {
             const bookId = req.params.id;
             const data = await this.BookService.getBook((bookId));
-                res.status(HttpStatus.OK).json({
-                    code: HttpStatus.OK,
-                    message: 'Book fetched successfully',
-                    data
+            // Clear cache after book update
+            await redisClient.del(`books`);
+              res.status(HttpStatus.OK).json({
+                  code: HttpStatus.OK,
+                  message: 'Book fetched successfully',
+                  data
                 });
             } catch (error)  {
               res.status(HttpStatus.BAD_REQUEST).json({
@@ -49,7 +54,7 @@ class BookController{
         const { page, limit } = req.query;
           try {
             const data = await this.BookService.getBooks(Number(page), Number(limit));
-            // Cache the fetched books data
+            //Cache the fetched books data
             await redisClient.setEx('books', 3600, JSON.stringify(data));
             res.status(HttpStatus.OK).json({
             code: HttpStatus.OK,
@@ -86,6 +91,9 @@ class BookController{
     const bookId = req.params.id;
     const data= await this.BookService.updateBookInfoById(bookId,req.body);
     try {
+      // Clear cache after book update
+      await redisClient.del(`books`);
+
       res.status(HttpStatus.ACCEPTED).json({
         code :HttpStatus.ACCEPTED,
         data,
@@ -102,9 +110,11 @@ class BookController{
 
       // Delete a Book by id
       public deleteBook = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const bookId = req.params.id;
         try {
-          const bookId = req.params.id;
           await this.BookService.deleteBookById(bookId);
+           // Clear cache after book update
+           await redisClient.del(`books`);
 
         res.status(HttpStatus.OK).json({
           code: HttpStatus.OK,

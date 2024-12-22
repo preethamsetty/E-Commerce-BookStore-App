@@ -18,7 +18,7 @@ class CustomerDetailsRoutes {
     // Get customer Details
     this.router.get('', authMiddleware(),this.customerDetailsController.getCustomerDetails);
     //Update customer Details
-    this.router.put('', authMiddleware(), this.customerDetailsController.updateCustomerDetails);
+    this.router.put('/:id', authMiddleware(), this.customerDetailsController.updateCustomerDetails);
   };
 
   public getRoutes = (): IRouter => {

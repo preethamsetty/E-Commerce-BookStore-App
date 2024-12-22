@@ -56,8 +56,9 @@ class CustomerDetailsController {
     next: NextFunction
     ): Promise<void> => {
         try {
-            const { body, params } = req;
-            const result = await this.customerDetailsService.updateCustomerDetails(body, params.id);
+            const { id } = req.params;
+            const { body } = req;
+            const result = await this.customerDetailsService.updateCustomerDetails(body,id);
             res.status(result.code).json({
                 code: result.code,
                 data: result.data,
