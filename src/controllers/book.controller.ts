@@ -12,7 +12,7 @@ class BookController{
           const bookData = req.body; // Book data from the request body
           const data = await this.BookService.createBook(bookData);
 
-           // Clear cache after note update
+           // Clear cache 
             await redisClient.del(`books`);
 
           res.status(HttpStatus.CREATED).json({
@@ -34,7 +34,7 @@ class BookController{
         try {
             const bookId = req.params.id;
             const data = await this.BookService.getBook((bookId));
-            // Clear cache after note update
+            // Clear cache 
             await redisClient.del(`books`);
               res.status(HttpStatus.OK).json({
                   code: HttpStatus.OK,
@@ -51,8 +51,8 @@ class BookController{
 
     // Get Books
     public getBooks = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const page = Number(req.query.page) || 1; // Default to page 1
-    const limit = Number(req.query.limit) || 16; // Default to 16 items per page
+    const page = Number(req.query.page) || 1; 
+    const limit = Number(req.query.limit) || 16; 
     const cacheKey = `books:page=${page}:limit=${limit}`;
   
     try {
@@ -109,7 +109,7 @@ class BookController{
     const bookId = req.params.id;
     const data= await this.BookService.updateBookInfoById(bookId,req.body);
     try {
-      // Clear cache after note update
+      // Clear cache after book update
       await redisClient.del(`books`);
 
       res.status(HttpStatus.ACCEPTED).json({
@@ -131,7 +131,7 @@ class BookController{
         const bookId = req.params.id;
         try {
           await this.BookService.deleteBookById(bookId);
-           // Clear cache after note update
+           // Clear cache after deleting book
            await redisClient.del(`books`);
 
         res.status(HttpStatus.OK).json({

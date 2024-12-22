@@ -12,6 +12,9 @@ class WishlistController {
       const { userId } = req.body; 
   
       const wishlist = await this.wishlistService.addToWishlist(userId, BookId);
+
+      // Clear cache for the user's wishlist
+      await redisClient.del( `wishlist:${userId}`);
   
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
@@ -32,6 +35,9 @@ class WishlistController {
       const { userId } = req.body; 
   
       const wishlist = await this.wishlistService.removeToWishlist(userId, BookId);
+
+      // Clear cache for the user's wishlist
+      await redisClient.del( `wishlist:${req.body.userId}`);
   
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
