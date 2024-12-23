@@ -12,8 +12,7 @@ class BookController {
       res: Response
     ): Promise<void> => {
       try {
-          const bookData = req.body; // Book data from the request body
-          const data = await this.BookService.createBook(bookData);
+          const data = await this.BookService.createBook(req.body);
 
           // Clear cache 
           await redisClient.del('books');
@@ -38,7 +37,7 @@ class BookController {
       res: Response
     ): Promise<void> => {
         try {
-            const data = await this.BookService.getBook((req.params.id));
+            const data = await this.BookService.getBook(req.params.BookId);
             // Clear cache 
             await redisClient.del('books');
                 res.status(HttpStatus.OK).json({
@@ -59,9 +58,7 @@ class BookController {
       req: Request,
       res: Response
     ): Promise<void> => {
-      const page = Number(req.query.page) || 1; 
-      const limit = Number(req.query.limit) || 16; 
-      const cacheKey = `books:page=${page}:limit=${limit}`;
+      const cacheKey = `books:page=${req.params.page}:limit=16}`;
   
       try {
         // Check cache first
@@ -76,7 +73,7 @@ class BookController {
         }
   
         // Fetch from database if not in cache
-        const data = await this.BookService.getBooks(page, limit);
+        const data = await this.BookService.getBooks(Number(req.params.page));
   
         // Cache the fetched books data
         await redisClient.setEx(cacheKey, 3600, JSON.stringify(data));
@@ -122,8 +119,7 @@ class BookController {
       req: Request,
       res: Response,
     ): Promise<void> => {
-      const bookId = req.params.id;
-      const data = await this.BookService.updateBookInfoById(bookId, req.body);
+      const data = await this.BookService.updateBookInfoById(req.params.BookId, req.body);
       try {
         // Clear cache after book update
         await redisClient.del('books');
@@ -147,8 +143,8 @@ class BookController {
       res: Response
     ): Promise<void> => {
         try {
-          await this.BookService.deleteBookById(req.params.id);
-           await redisClient.del('books');
+          await this.BookService.deleteBookById(req.params.BookId);
+          await redisClient.del('books');
 
         res.status(HttpStatus.OK).json({
           code: HttpStatus.OK,
@@ -159,7 +155,7 @@ class BookController {
           code: HttpStatus.BAD_REQUEST,
           Error: error.message,
         });
-  }
+      }
     };
 
 

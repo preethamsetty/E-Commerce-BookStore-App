@@ -14,17 +14,15 @@ export const cacheMiddleware = (keyPrefix: string) => {
           : `${keyPrefix}:${req.params.userId || req.body.userId}`;
 
       const data = await redisClient.get(cacheKey);
-      if (data) {
+      if (data)
         res.status(200).json({
           code: 200,
           data: JSON.parse(data),
           message: `${keyPrefix} fetched from cache`,
         });
-      } else {
+      else 
         next();
-      }
     } catch (error) {
-      console.error('Error with Redis middleware:', error);
       next();
     }
   };
