@@ -14,6 +14,7 @@ class CustomerDetailsService {
           throw new Error("Error creating customer details: " + error.message);
         }
       };
+
     public updateCustomerDetails = async(body: any, customerId: string): Promise<{ code: number; data: ICustomerDetails | null; message: string }> =>{
         try {
             const customerDetails = await CustomerDetails.findOne({ _id: customerId });

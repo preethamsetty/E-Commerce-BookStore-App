@@ -12,6 +12,9 @@ class WishlistController {
       const { userId } = req.body; 
   
       const wishlist = await this.wishlistService.addToWishlist(userId, BookId);
+
+      // Clear cache for the user's wishlist
+      await redisClient.del( `wishlist:${userId}`);
   
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
@@ -26,12 +29,15 @@ class WishlistController {
     }
   };
 
-  public removeToWishlist = async (req: Request, res: Response): Promise<void> =>  {
+  public removeFromWishlist = async (req: Request, res: Response): Promise<void> =>  {
     try {
       const { BookId } = req.params; 
       const { userId } = req.body; 
   
-      const wishlist = await this.wishlistService.removeToWishlist(userId, BookId);
+      const wishlist = await this.wishlistService.removeFromWishlist(userId, BookId);
+
+      // Clear cache for the user's wishlist
+      await redisClient.del( `wishlist:${req.body.userId}`);
   
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,

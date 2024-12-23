@@ -15,6 +15,10 @@ class OrderController {
     ): Promise<void> => {
         try{
             const data = await this.OrderService.orderCart(req.body.userId)
+
+            // Clear cache for the user's orders
+            await redisClient.del( `wishlist:${req.body.userId}`);
+            
             res.status(HttpStatus.OK).json({
                 code : HttpStatus.OK,
                 data : data

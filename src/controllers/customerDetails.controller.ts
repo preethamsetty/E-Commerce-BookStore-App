@@ -50,29 +50,29 @@ class CustomerDetailsController {
                 });
             }
         };
-  public updateCustomerDetails = async(
-    req: Request, 
-    res: Response,
-    next: NextFunction
-    ): Promise<void> => {
-        try {
-            const { id } = req.params;
-            const { body } = req;
-            const result = await this.customerDetailsService.updateCustomerDetails(body,id);
-            res.status(result.code).json({
-                code: result.code,
-                data: result.data,
-                message: result.message,
-            });
-        } catch (error) {
-            console.error(error);
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                code: HttpStatus.INTERNAL_SERVER_ERROR,
-                data: null,
-                message: error.message || 'An error occurred',
-            });
-        }
-    } ;
+        public updateCustomerDetails = async(
+          req: Request, 
+          res: Response,
+          next: NextFunction
+          ): Promise<void> => {
+              try {
+                  const { id } = req.params;
+                  const { body } = req;
+                  const result = await this.customerDetailsService.updateCustomerDetails(body,id);
+                  res.status(result.code).json({
+                      code: result.code,
+                      data: result.data,
+                      message: result.message,
+                  });
+              } catch (error) {
+                  console.error(error);
+                  res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                      code: HttpStatus.INTERNAL_SERVER_ERROR,
+                      data: null,
+                      message: error.message || 'An error occurred',
+                  });
+              }
+          } ;
 }
 
 export default CustomerDetailsController;

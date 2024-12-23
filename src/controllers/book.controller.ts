@@ -12,7 +12,7 @@ class BookController{
           const bookData = req.body; // Book data from the request body
           const data = await this.BookService.createBook(bookData);
 
-           // Clear cache after book update
+           // Clear cache 
             await redisClient.del(`books`);
 
           res.status(HttpStatus.CREATED).json({
@@ -34,7 +34,7 @@ class BookController{
         try {
             const bookId = req.params.id;
             const data = await this.BookService.getBook((bookId));
-            // Clear cache after book update
+            // Clear cache 
             await redisClient.del(`books`);
               res.status(HttpStatus.OK).json({
                   code: HttpStatus.OK,
@@ -49,25 +49,43 @@ class BookController{
             }
       };
 
-      //Get Books
-      public getBooks = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const { page, limit } = req.query;
-          try {
-            const data = await this.BookService.getBooks(Number(page), Number(limit));
-            //Cache the fetched books data
-            await redisClient.setEx('books', 3600, JSON.stringify(data));
-            res.status(HttpStatus.OK).json({
-            code: HttpStatus.OK,
-            data,
-            message: 'Books fetched successfully'
-          });
-      } catch (error) {
-          res.status(HttpStatus.BAD_REQUEST).json({
-          code: HttpStatus.BAD_REQUEST,
-          Error: error.message,
+    // Get Books
+    public getBooks = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const page = Number(req.query.page) || 1; 
+    const limit = Number(req.query.limit) || 16; 
+    const cacheKey = `books:page=${page}:limit=${limit}`;
+  
+    try {
+      // Check cache first
+      const cachedData = await redisClient.get(cacheKey);
+      if (cachedData) {
+        res.status(HttpStatus.OK).json({
+          code: HttpStatus.OK,
+          data: JSON.parse(cachedData),
+          message: 'Books fetched successfully (from cache)',
         });
+        return;
+      }
+  
+      // Fetch from database if not in cache
+      const data = await this.BookService.getBooks(page, limit);
+  
+      // Cache the fetched books data
+      await redisClient.setEx(cacheKey, 3600, JSON.stringify(data));
+  
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        data,
+        message: 'Books fetched successfully',
+      });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        Error: error.message,
+      });
     }
-};
+  };
+
 
     //Get All Serched User Books 
     public getSearchedBooks = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -113,7 +131,7 @@ class BookController{
         const bookId = req.params.id;
         try {
           await this.BookService.deleteBookById(bookId);
-           // Clear cache after book update
+           // Clear cache after deleting book
            await redisClient.del(`books`);
 
         res.status(HttpStatus.OK).json({

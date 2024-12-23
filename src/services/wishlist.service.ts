@@ -43,7 +43,7 @@ class WishlistService {
         return wishlist;
       };
 
-    public removeToWishlist =  async (userId: string, bookId: string): Promise<IWishList | void> => {
+    public removeFromWishlist =  async (userId: string, bookId: string): Promise<IWishList | void> => {
     
       try {
         // Find the wishlist by userId
