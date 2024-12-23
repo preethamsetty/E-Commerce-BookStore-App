@@ -65,7 +65,7 @@ class CartController {
   ): Promise<void> => {
     try {
   
-      const data = await this.CartService.removeItem(req.body.userId, req.body.BookId);
+      const data = await this.CartService.removeItem(req.body.userId, req.params.BookId);
   
       // Clear cache for the user's cart
       await redisClient.del( `cart:${req.body.userId}`);

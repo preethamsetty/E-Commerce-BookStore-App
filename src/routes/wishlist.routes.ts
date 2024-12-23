@@ -20,7 +20,7 @@ class wishlistRoutes {
     this.router.delete(
       '/:BookId',
       authMiddleware(),
-      this.WishlistController.removeToWishlist,
+      this.WishlistController.removeFromWishlist,
     );
 
     this.router.get(

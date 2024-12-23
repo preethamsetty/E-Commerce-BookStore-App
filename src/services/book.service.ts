@@ -71,9 +71,9 @@ class BookService {
 
 // Sort and Paginate Books by Price API
 public sortBooks = async (
-  order: string,
+  order: 'asc'|'desc' = 'asc',
   page: number,
-): Promise<{ data: IBook[]; pagination: any }> => {
+): Promise<IBook[]> => {
   const sortOrder = order === 'asc' ? 1 : -1; 
   const skip = (page - 1) * 16; 
 
@@ -82,22 +82,9 @@ public sortBooks = async (
     .skip(skip)
     .limit(16);
 
-  const totalBooks = await Book.countDocuments();
-  const totalPages = Math.ceil(totalBooks / 16);
+  if (books.length === 0) new Error('No Books Present');
 
-  if (books.length === 0) {
-    throw new Error('No Books Present');
-  }
-
-  return {
-    data: books,
-    pagination: {
-      currentPage: page,
-      totalPages: totalPages,
-      totalBooks: totalBooks,
-      limitPerPage: 16,
-    },
-  };
+  return books
 };
 
 }

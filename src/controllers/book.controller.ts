@@ -16,7 +16,7 @@ class BookController {
           const data = await this.BookService.createBook(bookData);
 
           // Clear cache 
-          await redisClient.del(`books`);
+          await redisClient.del('books');
 
           res.status(HttpStatus.CREATED).json({
               code: HttpStatus.CREATED,
@@ -40,7 +40,7 @@ class BookController {
         try {
             const data = await this.BookService.getBook((req.params.id));
             // Clear cache 
-            await redisClient.del(`books`);
+            await redisClient.del('books');
                 res.status(HttpStatus.OK).json({
                     code: HttpStatus.OK,
                     message: 'Book fetched successfully',
@@ -99,7 +99,10 @@ class BookController {
       req: Request,
       res: Response,
     ): Promise<void> => {
-      const data = await this.BookService.getSearchedBooks(req.query.searchQuery as string, Number(req.params.page) );
+      const data =
+        await this.BookService.getSearchedBooks(
+          req.query.searchQuery as string, Number(req.params.page)
+        );
       try {
         res.status(HttpStatus.OK).json({
           code: HttpStatus.OK,
@@ -145,7 +148,7 @@ class BookController {
     ): Promise<void> => {
         try {
           await this.BookService.deleteBookById(req.params.id);
-           await redisClient.del(`books`);
+           await redisClient.del('books');
 
         res.status(HttpStatus.OK).json({
           code: HttpStatus.OK,
@@ -160,34 +163,27 @@ class BookController {
     };
 
 
-    // Sort and Paginate Books by Price API
-    public sortBooks = async (req: Request, res: Response): Promise<void> => {
-      try {
-        const order = (req.query.order as string) || 'asc'; 
-        const page = parseInt(req.query.page as string) || 1; 
+  // Sort and Paginate Books by Price API
+  public sortBooks = async (req: Request, res: Response): Promise<void> => {
+    try {
+
+      const books = 
+      await this.BookService.sortBooks(req.query.order as 'asc'|'desc', Number(req.params.page));
+      res.status(200).json({
+        code: 200,
+        message: 'Books sorted successfully',
+        data: books,
+      });
+    } 
     
-        if (order !== 'asc' && order !== 'desc') {
-          res.status(400).json({
-            code: 400,
-            message: "Invalid 'order' value. Use 'asc' or 'desc'.",
-          });
-        }
-    
-        const books = await this.BookService.sortBooks(order, page);
-        res.status(200).json({
-          code: 200,
-          message: 'Books sorted successfully',
-          data: books.data,
-          pagination: books.pagination,
-        });
-      } catch (error) {
-        res.status(500).json({
-          code: 500,
-          message: 'Failed to sort books',
-          error: error.message,
-        });
-      }
-    };
+    catch (error) {
+      res.status(500).json({
+        code: 500,
+        message: 'Failed to sort books',
+        error: error.message,
+      });
+    }
+  };
 }
 
 export default BookController;

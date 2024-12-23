@@ -29,13 +29,14 @@ class WishlistController {
     }
   };
 
-  public removeToWishlist = async (
+
+  public removeFromWishlist = async (
     req: Request,
     res: Response,
   ): Promise<void> => {
     try {
       const wishlist =
-      await this.wishlistService.removeToWishlist(req.body.userId, req.params.BookId);
+      await this.wishlistService.removeFromWishlist(req.body.userId, req.params.BookId);
   
       // Clear cache for the user's wishlist
       await redisClient.del( `wishlist:${req.body.userId}`);

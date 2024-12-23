@@ -107,20 +107,24 @@ class CartService {
         cart.totalQuantity = 0;
       }
 
-      await cart.save();
-      return cart;
-    }
-
-    if (quantityChange > 0 && newQuantity > bookDetails.quantity) throw new Error('Not enough stock available for this book');
-
-    cart.books[bookIndex].quantity = newQuantity;
-    cart.totalQuantity += quantityChange;
-    cart.totalPrice += quantityChange * bookDetails.price;
-    cart.totalDiscountPrice += quantityChange * bookDetails.discountPrice;
-
     await cart.save();
     return cart;
-  };
+  }
+
+  // Checking if quantity is available for increment 
+  if (quantityChange > 0 && newQuantity > bookDetails.quantity)
+    throw new Error('Not enough stock available for this book');
+
+
+  // Update quantity, total quantity, and prices
+  cart.books[bookIndex].quantity = newQuantity;
+  cart.totalQuantity += quantityChange;
+  cart.totalPrice += quantityChange * bookDetails.price;
+  cart.totalDiscountPrice += quantityChange * bookDetails.discountPrice;
+
+  await cart.save();
+  return cart;
+};
 
   public removeItem = async (
     userId: string,
@@ -129,41 +133,40 @@ class CartService {
     const cart = await Cart.findOne({ userId: userId });
     if (!cart) throw new Error('Cart not found');
 
-    const existingBook = cart.books.find(
-      (book: { bookId: string }) => book.bookId === bookId,
-    );
-    if (!existingBook) throw new Error('Book not found in cart');
+    // Check if the book exists in the cart
+  const existingBookIndex = 
+    cart.books.findIndex((book: { bookId: string }) => book.bookId === bookId);
+    
+  if (existingBookIndex === -1) throw new Error('Book not found in cart');
 
-    const bookDetails = await Book.findById(bookId);
-    if (!bookDetails) throw new Error('Book details not found');
+  // Fetch book details
+  const bookDetails = await Book.findById(bookId);
+  if (!bookDetails) throw new Error('Book details not found');
 
-    let updatedBooks = cart.books.map(
-      (book: { bookId: string; quantity: number }) => {
-        if (book.bookId === bookId) {
-          return {
-            ...book,
-            quantity: book.quantity - 1,
-          };
-        }
-        return book;
-      },
-    );
+  // Decrement the quantity of the book
+  const existingBook = cart.books[existingBookIndex];
+  if (existingBook.quantity > 1) {
+    // Decrease quantity by 1
+    cart.books[existingBookIndex].quantity -= 1;
+  } else {
+    // Remove the book from the cart if quantity reaches 0
+    cart.books.splice(existingBookIndex, 1);
+  }
 
-    updatedBooks = updatedBooks.filter(
-      (book: { quantity: number }) => book.quantity > 0,
-    );
+  // Adjust total values
+  cart.totalPrice -= bookDetails.price;
+  cart.totalDiscountPrice -= bookDetails.discountPrice;
+  cart.totalQuantity -= 1;
 
-    cart.books = updatedBooks;
-    cart.totalPrice -= bookDetails.price;
-    cart.totalDiscountPrice -= bookDetails.discountPrice;
-    cart.totalQuantity -= 1;
+  // Ensure no negative totals
+  cart.totalPrice = Math.max(cart.totalPrice, 0);
+  cart.totalDiscountPrice = Math.max(cart.totalDiscountPrice, 0);
+  cart.totalQuantity = Math.max(cart.totalQuantity, 0);
 
-    cart.totalPrice = Math.max(cart.totalPrice, 0);
-    cart.totalDiscountPrice = Math.max(cart.totalDiscountPrice, 0);
-    cart.totalQuantity = Math.max(cart.totalQuantity, 0);
+  // Save updated cart
+  await cart.save();
 
-    await cart.save();
-    return cart;
+  return cart;
   };
 
   // Delete the cart
@@ -176,10 +179,12 @@ class CartService {
   };
 
   public getCart = async (userId: string): Promise<ICart | null> => {
+
     const cart = await Cart.findOne({ userId: userId });
     if (!cart) throw new Error('User doesnt have Cart');
     return cart;
   };
+
 }
 
 export default CartService;

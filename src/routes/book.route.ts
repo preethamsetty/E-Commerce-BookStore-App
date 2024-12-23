@@ -32,7 +32,7 @@ class BookRoutes {
 
     // Route for sorting books by price
     this.router.get(
-      '/sort',
+      '/sort/:page',
       authMiddleware(),
       this.BookController.sortBooks
     );

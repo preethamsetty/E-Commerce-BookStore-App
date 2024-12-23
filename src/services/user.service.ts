@@ -102,8 +102,8 @@ class UserService {
   public async updateUser(
     id: string,
     updateData: {firstName: string, lastName: string},
-    filePath?: any
-  ): Promise<any> {
+    filePath?: string
+  ): Promise<IUser> {
     let profilePicture = '';
 
     // If an image is uploaded, upload it to Cloudinary
