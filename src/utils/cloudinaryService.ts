@@ -1,4 +1,4 @@
-import { v2 as cloudinary } from 'cloudinary';
+import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -8,7 +8,9 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export const uploadImage = async (filePath: string): Promise<any> => {
+export const uploadImage = async (
+  filePath: string
+): Promise<UploadApiResponse> => {
   return cloudinary.uploader.upload(filePath, {
     folder: 'profile_pictures',
     resource_type: 'image',

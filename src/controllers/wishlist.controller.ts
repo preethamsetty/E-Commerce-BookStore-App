@@ -1,20 +1,20 @@
-import { Request, Response } from "express";
-import HttpStatus from "http-status-codes";
-import WishlistService from "../services/wishlist.service";
-import redisClient from "../config/redisClient";
+import { Request, Response } from 'express';
+import HttpStatus from 'http-status-codes';
+import WishlistService from '../services/wishlist.service';
+import redisClient from '../config/redisClient';
 
 class WishlistController {
   public wishlistService = new WishlistService();
 
-  public addToWishlist = async (req: Request, res: Response): Promise<void> => {
+  public addToWishlist = async (
+    req: Request,
+    res: Response
+  ): Promise<void> => {
     try {
-      const { BookId } = req.params; 
-      const { userId } = req.body; 
-  
-      const wishlist = await this.wishlistService.addToWishlist(userId, BookId);
+      const wishlist = await this.wishlistService.addToWishlist(req.body.userId, req.params.BookId);
 
       // Clear cache for the user's wishlist
-      await redisClient.del( `wishlist:${userId}`);
+      await redisClient.del( `wishlist:${req.body.userId}`);
   
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
@@ -29,16 +29,18 @@ class WishlistController {
     }
   };
 
-  public removeFromWishlist = async (req: Request, res: Response): Promise<void> =>  {
-    try {
-      const { BookId } = req.params; 
-      const { userId } = req.body; 
-  
-      const wishlist = await this.wishlistService.removeFromWishlist(userId, BookId);
 
+  public removeFromWishlist = async (
+    req: Request,
+    res: Response,
+  ): Promise<void> => {
+    try {
+      const wishlist =
+      await this.wishlistService.removeFromWishlist(req.body.userId, req.params.BookId);
+  
       // Clear cache for the user's wishlist
       await redisClient.del( `wishlist:${req.body.userId}`);
-  
+
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
         message: 'Book Removed From wishlist successfully',
@@ -50,25 +52,24 @@ class WishlistController {
         message: error.message,
       });
     }
-
   };
 
   // Get Wishlist
-  public getWishlist = async(
-    req: Request, 
+  public getWishlist = async (
+    req: Request,
     res: Response
-    ): Promise<void> => {
+  ): Promise<void> => {
     try {
       const { userId } = req.body;
       const wishlist = await this.wishlistService.getWishlist(userId);
-  
+
       // Cache the wishlist data
       const cacheKey = `wishlist:${userId}`;
       await redisClient.setEx(cacheKey, 3600, JSON.stringify(wishlist));
-  
+
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
-        message: "Wishlist retrieved successfully",
+        message: 'Wishlist retrieved successfully',
         data: wishlist,
       });
     } catch (error) {
@@ -78,7 +79,6 @@ class WishlistController {
       });
     }
   };
-  
 }
 
 export default WishlistController;

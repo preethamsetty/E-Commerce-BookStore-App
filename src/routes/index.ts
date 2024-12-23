@@ -9,23 +9,41 @@ import CustomerDetailsRoutes from './customerDetails.route';
 const router = express.Router();
 
 const routes = (): IRouter => {
+
   router.get('/', (req, res) => {
     res.json('Welcome');
   });
-  router.use('/users', new userRoute().getRoutes());
-  
-  router.use('/books', new bookRoute().getRoutes());
 
-  router.use('/cart', new cartRoute().getRoutes());
+  router.use(
+    '/users',
+    new userRoute().getRoutes()
+  );
+  router.use(
+    '/books',
+    new bookRoute().getRoutes()
+  );
 
-  router.use('/wishlist', new wishlistRoutes().getRoutes());
+  router.use(
+    '/cart',
+    new cartRoute().getRoutes()
+  );
 
-  router.use('/orders', new ordersRoutes().getRoutes());
+  router.use(
+    '/wishlist',
+    new wishlistRoutes().getRoutes()
+  );
 
-  router.use('/customer', new CustomerDetailsRoutes().getRoutes());
- 
+  router.use(
+    '/orders',
+    new ordersRoutes().getRoutes()
+  );
+
+  router.use(
+    '/customer',
+    new CustomerDetailsRoutes().getRoutes()
+  );
+
   return router;
-  
 };
 
 export default routes;

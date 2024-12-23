@@ -6,7 +6,6 @@ class Database {
   private logger;
 
   constructor() {
-    
     this.DATABASE =
       process.env.NODE_ENV === 'test'
         ? process.env.DATABASE_TEST
@@ -21,7 +20,7 @@ class Database {
         useFindAndModify: false,
         useCreateIndex: true,
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
       });
       this.logger.info('Connected to the database.');
     } catch (error) {

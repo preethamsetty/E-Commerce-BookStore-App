@@ -1,4 +1,5 @@
-import express, { IRouter } from "express";
+import express, { IRouter } from 'express';
+/* eslint-disable-next-line max-len */
 import CustomerDetailsController from '../controllers/customerDetails.controller';
 import { authMiddleware } from '../middlewares/auth.middleware';
 
@@ -12,13 +13,26 @@ class CustomerDetailsRoutes {
   }
 
   private routes = (): void => {
+    // Add customer details
+    this.router.post(
+      '',
+      authMiddleware(),
+      this.customerDetailsController.addCustomer,
+    );
 
-     // Add customer details
-    this.router.post('',  authMiddleware(),this.customerDetailsController.addCustomer);
     // Get customer Details
-    this.router.get('', authMiddleware(),this.customerDetailsController.getCustomerDetails);
+    this.router.get(
+      '',
+      authMiddleware(),
+      this.customerDetailsController.getCustomerDetails,
+    );
+
     //Update customer Details
-    this.router.put('/:id', authMiddleware(), this.customerDetailsController.updateCustomerDetails);
+    this.router.put(
+      '/:id',
+      authMiddleware(),
+      this.customerDetailsController.updateCustomerDetails
+    );
   };
 
   public getRoutes = (): IRouter => {

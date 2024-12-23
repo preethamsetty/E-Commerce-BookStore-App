@@ -13,24 +13,24 @@ const customerDetailsSchema = new Schema(
     },
     mobileNumber: {
       type: String,
-      default: null, 
+      default: null,
     },
     address: {
       type: String,
-      default: null, 
+      default: null,
     },
     state: {
       type: String,
-      default: null, 
+      default: null,
     },
     city: {
       type: String,
-      default: null, 
+      default: null,
     },
   },
   {
-    timestamps: true, 
-  }
+    timestamps: true,
+  },
 );
 
 export default model<ICustomerDetails>('CustomerDetails', customerDetailsSchema);

@@ -1,14 +1,14 @@
 import { Document } from 'mongoose';
 
 export interface IOrder extends Document {
-    userId: string;
-    cart:{
+  userId: string;
+  cart: {
     totalPrice: number;
     totalDiscountPrice: number;
     totalQuantity: number;
     books: {
-    bookId: string;
-    quantity: number;
+      bookId: string;
+      quantity: number;
     }[];
-    }
+  };
 }

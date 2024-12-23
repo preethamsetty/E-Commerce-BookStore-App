@@ -1,107 +1,111 @@
-import { ICart } from "../interfaces/cart.interface";
-import User from "../models/user.model"
-import Cart from "../models/cart.model";
-import Book from "../models/book.model";
+import { ICart } from '../interfaces/cart.interface';
+import User from '../models/user.model';
+import Cart from '../models/cart.model';
+import Book from '../models/book.model';
 class CartService {
-  
-  // Add Book to Cart
-  public addToCart = async (userId :string, BookId :string): Promise<ICart> => {
+  public addToCart = async (
+    userId: string,
+    BookId: string
+  ): Promise<ICart> => {
     const isUser = await User.findById(userId);
 
-    if(!isUser) throw new Error("User doesn't exist");
+    if (!isUser) throw new Error('User doesnt exist');
 
-    const cart = await Cart.findOne({userId:userId})
-    const bookDetails = await Book.findOne({_id:BookId, quantity:{$gt:0}})
-    
-    if(!bookDetails) throw new Error("Book doesn't exist");
+    const cart = await Cart.findOne({ userId: userId });
+    const bookDetails = await Book.findOne({
+      _id: BookId,
+      quantity: { $gt: 0 },
+    });
+    if (!bookDetails) throw new Error('Book doesnt exist');
 
-    if(!cart){
-
+    if (!cart) {
       const createdData = await Cart.create({
         userId: userId,
         totalPrice: bookDetails.price,
         totalDiscountPrice: bookDetails.discountPrice,
         totalQuantity: 1,
-        books: [{bookId: BookId, quantity: 1}]
+        books: [{ bookId: BookId, quantity: 1 }],
       });
 
       return createdData;
-
     }
 
-    const book = cart.books.findIndex((book) => book.bookId === BookId)
+    const book = cart.books.findIndex((book) => book.bookId === BookId);
 
-    if(book !== -1) {
-
-      if(cart.books[book].quantity+1>bookDetails.quantity) throw new Error("Out of Stock");
+    if (book !== -1) {
+      if (cart.books[book].quantity + 1 > bookDetails.quantity)
+        throw new Error('Out of Stock');
 
       const existData = await Cart.findOneAndUpdate(
-        { userId: userId, "books.bookId": BookId },
-        { $inc: {
-            "books.$.quantity": 1,
+        { userId: userId, 'books.bookId': BookId },
+        {
+          $inc: {
+            'books.$.quantity': 1,
             totalPrice: bookDetails.price,
             totalDiscountPrice: bookDetails.discountPrice,
-            totalQuantity: 1
-          }
+            totalQuantity: 1,
+          },
         },
-        { new: true }
-      )
-      return existData
-      
-    }
-    else {
+        { new: true },
+      );
+      return existData;
+    } else {
       const newBook = await Cart.findOneAndUpdate(
-        {userId: userId},
-        {$inc: {
-          totalQuantity: 1,
-          totalPrice: bookDetails.price,
-          totalDiscountPrice:  bookDetails.discountPrice
-        },  
-        $push: { 
-          books: { 
-            bookId: BookId, 
-            quantity: 1 
-          } 
-        }},
-        { new: true }
-      )
-      return newBook
+        { userId: userId },
+        {
+          $inc: {
+            totalQuantity: 1,
+            totalPrice: bookDetails.price,
+            totalDiscountPrice: bookDetails.discountPrice,
+          },
+          $push: {
+            books: {
+              bookId: BookId,
+              quantity: 1,
+            },
+          },
+        },
+        { new: true },
+      );
+      return newBook;
     }
   };
 
-  // update the quantity
-public updateQuantity = async (
-  userId: string,
-  BookId: string,
-  quantityChange: number
-): Promise<ICart> => {
-  const isUser = await User.findById(userId);
-  if (!isUser) throw new Error("User doesn't exist");
+  public updateQuantity = async (
+    userId: string,
+    BookId: string,
+    quantityChange: number,
+  ): Promise<ICart> => {
+    const isUser = await User.findById(userId);
+    if (!isUser) throw new Error('User doesnt exist');
 
-  const cart = await Cart.findOne({ userId: userId });
-  if (!cart) throw new Error("Cart not found");
+    const cart = await Cart.findOne({ userId: userId });
+    if (!cart) throw new Error('Cart not found');
 
-  const bookIndex = cart.books.findIndex((book) => book.bookId.toString() === BookId.toString());
-  if (bookIndex === -1) throw new Error("Book not found in cart");
+    const bookIndex = cart.books.findIndex(
+      (book) => book.bookId.toString() === BookId.toString(),
+    );
+    if (bookIndex === -1) throw new Error('Book not found in cart');
 
-  const bookDetails = await Book.findOne({ _id: BookId });
-  if (!bookDetails) throw new Error("Book not found");
+    const bookDetails = await Book.findOne({ _id: BookId });
+    if (!bookDetails) throw new Error('Book not found');
 
-  const existingBook = cart.books[bookIndex];
-  let newQuantity = existingBook.quantity + quantityChange;
+    const existingBook = cart.books[bookIndex];
+    const newQuantity = existingBook.quantity + quantityChange;
 
-  if (newQuantity <= 0) {
-    cart.books.splice(bookIndex, 1);
+    if (newQuantity <= 0) {
+      cart.books.splice(bookIndex, 1);
 
-    cart.totalQuantity -= existingBook.quantity; 
-    cart.totalPrice -= existingBook.quantity * bookDetails.price;
-    cart.totalDiscountPrice -= existingBook.quantity * bookDetails.discountPrice;
+      cart.totalQuantity -= existingBook.quantity;
+      cart.totalPrice -= existingBook.quantity * bookDetails.price;
+      cart.totalDiscountPrice -=
+        existingBook.quantity * bookDetails.discountPrice;
 
-    if (cart.books.length === 0) {
-      cart.totalPrice = 0;
-      cart.totalDiscountPrice = 0;
-      cart.totalQuantity = 0;
-    }
+      if (cart.books.length === 0) {
+        cart.totalPrice = 0;
+        cart.totalDiscountPrice = 0;
+        cart.totalQuantity = 0;
+      }
 
     await cart.save();
     return cart;
@@ -122,15 +126,14 @@ public updateQuantity = async (
   return cart;
 };
 
-//Remove Book from Cart
-public removeItem = async (body: { userId: string }, bookId: string): Promise<ICart | undefined> => {
-  // Fetch the user's cart
-  const cart = await Cart.findOne({ userId: body.userId });
-  if (!cart) {
-    throw new Error("Cart not found");
-  }
+  public removeItem = async (
+    userId: string,
+    bookId: string,
+  ): Promise<ICart | undefined> => {
+    const cart = await Cart.findOne({ userId: userId });
+    if (!cart) throw new Error('Cart not found');
 
-  // Check if the book exists in the cart
+    // Check if the book exists in the cart
   const existingBookIndex = cart.books.findIndex((book: { bookId: string }) => book.bookId === bookId);
   if (existingBookIndex === -1) {
     throw new Error("Book not found in cart");
@@ -167,27 +170,24 @@ public removeItem = async (body: { userId: string }, bookId: string): Promise<IC
 
   console.log("Updated Cart:", cart); 
   return cart;
-};
+  };
 
-
-
-// Delete the cart
-  public deleteCart =  async (userId :string ):Promise<ICart | void> => {
-
+  // Delete the cart
+  public deleteCart = async (
+    userId: string
+  ): Promise<ICart | void> => {
     const cart = await Cart.findOne({ userId });
-    if (!cart) throw new Error("User doesn't have Cart");
+    if (!cart) throw new Error('User doesnt have Cart');
     await Cart.deleteOne({ userId });
-    
   };
 
   public getCart = async (userId: string): Promise<ICart | null> => {
-    const cart = await Cart.findOne({userId:userId });
-    if (!cart) throw new Error("User doesn't have Cart");
-    return cart
-  }
+
+    const cart = await Cart.findOne({ userId: userId });
+    if (!cart) throw new Error('User doesnt have Cart');
+    return cart;
+  };
 
 }
 
 export default CartService;
-
-
