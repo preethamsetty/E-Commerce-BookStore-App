@@ -1,12 +1,12 @@
 import { Document } from 'mongoose';
 
 export interface ICart extends Document {
-  userId: string; 
+  userId: string;
   totalPrice: number;
   totalDiscountPrice: number;
   totalQuantity: number;
   books: {
-    bookId: string; 
+    bookId: string;
     quantity: number;
   }[];
 }

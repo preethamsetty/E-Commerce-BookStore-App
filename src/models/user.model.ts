@@ -5,23 +5,23 @@ const userSchema = new Schema(
   {
     firstName: {
       type: String,
-      required: true
+      required: true,
     },
     lastName: {
       type: String,
-      required: true
+      required: true,
     },
     email: {
       type: String,
-      required: true
+      required: true,
     },
     password: {
       type: String,
-      required: true
+      required: true,
     },
-    refreshToken:{
+    refreshToken: {
       type: String,
-      default: ''
+      default: '',
     },
     role:{
       type:String,
@@ -33,8 +33,8 @@ const userSchema = new Schema(
     },
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 );
 
 export default model<IUser>('User', userSchema);

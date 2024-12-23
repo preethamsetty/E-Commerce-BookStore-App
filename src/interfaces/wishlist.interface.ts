@@ -1,11 +1,11 @@
 import { Document } from 'mongoose';
 
 export interface IWishList extends Document {
-  userId: string; 
+  userId: string;
   books: {
-    bookId  : string; 
+    bookId: string;
     bookName: string;
-    author  : string;
-    price   : number;
-  }[]; 
+    author: string;
+    price: number;
+  }[];
 }

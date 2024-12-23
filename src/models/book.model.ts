@@ -38,7 +38,7 @@ const bookSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 bookSchema.index({ bookName: 'text' }, { background: true });

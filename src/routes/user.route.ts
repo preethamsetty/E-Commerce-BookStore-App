@@ -7,7 +7,7 @@ import { upload } from '../middlewares/multer';
 class UserRoutes {
   private UserController = new userController();
   private UserValidator = new userValidator();
- 
+
   private router = express.Router();
 
   constructor() {
@@ -15,27 +15,56 @@ class UserRoutes {
   }
 
   private routes = () => {
+    // Route to register a new user
+    this.router.post(
+      '',
+      this.UserValidator.registerUser,
+      this.UserController.registerUser,
+    );
 
-   // Route to register a new user
-   this.router.post('', this.UserValidator.registerUser, this.UserController.registerUser);
+    // Route to register an admin
+    this.router.post(
+      '/admin',
+      this.UserValidator.registerUser,
+      this.UserController.registerAdmin,
+    );
 
-   // Route to register an admin
-   this.router.post('/admin', this.UserValidator.registerUser, this.UserController.registerAdmin);
-    
-   //route to login
-   this.router.post('/login',this.UserValidator.loginUser, this.UserController.loginUser);
-    
-   //ForgotPassword
-   this.router.post('/forgotpassword', this.UserValidator.validateEmail, this.UserController.forgotPassword); 
-    
-   //route to refreshToken
-   this.router.get('', authMiddleware(), this.UserValidator.id, this.UserController.refreshtoken)
-   
-   //route to reset password
-    this.router.post('/resetpassword',this.UserValidator.resetPassword, authMiddleware('reset'), this.UserController.resetPassword);
+    //route to login
+    this.router.post(
+      '/login',
+      this.UserValidator.loginUser,
+      this.UserController.loginUser,
+    );
 
-   //route to update the user details along with Profile Image
-    this.router.put('/:userId',upload.single('profilePicture'),authMiddleware(),this.UserController.updateUser);
+    //ForgotPassword
+    this.router.post(
+      '/forgotpassword',
+      this.UserValidator.validateEmail,
+      this.UserController.forgotPassword,
+    );
+
+    //route to refreshToken
+    this.router.get(
+      '',
+      authMiddleware(),
+      this.UserValidator.id,
+      this.UserController.refreshtoken,
+    );
+
+    //route to reset password
+    this.router.post(
+      '/resetpassword',
+      this.UserValidator.resetPassword,
+      authMiddleware('reset'),
+      this.UserController.resetPassword,
+    );
+
+    //route to update the user details along with Profile Image
+    this.router.put(
+      '/:userId',
+      upload.single('profilePicture'),
+      authMiddleware(),
+      this.UserController.updateUser);
   };
 
   public getRoutes = (): IRouter => {
