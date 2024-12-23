@@ -4,6 +4,8 @@ dotenv.config();
 import express, { Application } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import swaggerUi from 'swagger-ui-express';  // Import Swagger UI
+import swaggerDocs from './swaggerConfig';   // Import the Swagger docs config
 
 import routes from './routes';
 import Database from './config/database';
@@ -23,8 +25,7 @@ class App {
   private logger = Logger.logger;
   public errorHandler = new ErrorHandler();
 
-  constructor() {                                                                                   
-
+  constructor() {
     this.app = express();
     this.host = process.env.APP_HOST;
     this.port = process.env.APP_PORT;
@@ -51,6 +52,9 @@ class App {
 
   public initializeRoutes(): void {
     this.app.use(`/api/${this.api_version}`, routes());
+
+    // Add Swagger UI route
+    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
   }
 
   public initializeErrorHandlers(): void {
@@ -62,8 +66,9 @@ class App {
   public startApp(): void {
     this.app.listen(this.port, () => {
       this.logger.info(
-        `Server started at ${this.host}:${this.port}/api/${this.api_version}/`,
+        `Server started at ${this.host}:${this.port}/api/${this.api_version}/`
       );
+      this.logger.info('Swagger docs available at /api-docs');
     });
   }
 
