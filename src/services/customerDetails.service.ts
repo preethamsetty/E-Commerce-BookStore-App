@@ -36,13 +36,12 @@ class CustomerDetailsService {
         data: updatedDetails,
         message: 'Customer details successfully updated!',
       };
-    } else {
+    } else
       return {
         code: HttpStatus.BAD_REQUEST,
         data: null,
         message: 'Customer details not found!',
       };
-    }
   };
 
   public getCustomerDetails = async (
@@ -50,19 +49,18 @@ class CustomerDetailsService {
   ): Promise<{ code: number; data: ICustomerDetails[]; message: string }> => {
     const customerDetails = await CustomerDetails.find({ userId });
 
-    if (customerDetails && customerDetails.length > 0) {
+    if (customerDetails && customerDetails.length > 0)
       return {
         code: HttpStatus.ACCEPTED,
         data: customerDetails,
         message: 'Customer details successfully retrieved!',
       };
-    } else {
+    else
       return {
         code: HttpStatus.BAD_REQUEST,
         data: [],
         message: 'Customer details not found!',
       };
-    }
   };
 }
 

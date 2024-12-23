@@ -60,11 +60,10 @@ class WishlistController {
     res: Response
   ): Promise<void> => {
     try {
-      const { userId } = req.body;
-      const wishlist = await this.wishlistService.getWishlist(userId);
+      const wishlist = await this.wishlistService.getWishlist(req.body.userId);
 
       // Cache the wishlist data
-      const cacheKey = `wishlist:${userId}`;
+      const cacheKey = `wishlist:${req.body.userId}`;
       await redisClient.setEx(cacheKey, 3600, JSON.stringify(wishlist));
 
       res.status(HttpStatus.OK).json({

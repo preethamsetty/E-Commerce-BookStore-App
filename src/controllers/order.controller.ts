@@ -31,12 +31,12 @@ class OrderController {
 
 
   // Get orders
-  public getOrder = async (
+  public getOrders = async (
     req: Request,
     res: Response
   ): Promise<void> => {
     try {
-      const orders = await this.OrderService.getOrder( req.body.userId);
+      const orders = await this.OrderService.getOrders( req.body.userId);
 
       // Cache the order data
       const cacheKey = `order:${ req.body.userId}`;
