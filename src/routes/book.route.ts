@@ -28,20 +28,20 @@ class BookRoutes {
     this.router.get(
       '',
       cacheMiddleware('books'),
-      this.BookController.getBooks
+      this.BookController.getBooks,
     );
 
     // Route for sorting books by price
     this.router.get(
       '/sort/:page',
-      authMiddleware(),
-      this.BookController.sortBooks
+      this.BookController.sortBooks,
     );
 
     // Getting all user books
     this.router.get(
       '/search/:page',
-      this.BookController.getSearchedBooks);
+      this.BookController.getSearchedBooks,
+    );
 
     // get book by id - users/admins
     this.router.get(
@@ -56,7 +56,7 @@ class BookRoutes {
       authMiddleware(),
       isAdmin,
       this.BookValidator.getBookById,
-      this.BookController.updateBookInfoById,
+      this.BookController.updateBook,
     );
 
     // Delete book by id - Only admins
