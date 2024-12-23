@@ -10,9 +10,8 @@ class CustomerDetailsController {
     res: Response
   ): Promise<void> => {
     try {
-      const customerData = req.body;
 
-      const customerDetails = await this.customerDetailsService.createCustomerDetails(customerData);
+      const customerDetails = await this.customerDetailsService.createCustomerDetails(req.body);
 
       res.status(HttpStatus.CREATED).json({
         code: HttpStatus.CREATED,
@@ -40,7 +39,6 @@ class CustomerDetailsController {
             message: result.message,
         });
     } catch (error) {
-        console.error(error);
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
             code: HttpStatus.INTERNAL_SERVER_ERROR,
             data: null,
@@ -54,7 +52,7 @@ class CustomerDetailsController {
   ): Promise<void> => {
     try {
       const result = 
-      await this.customerDetailsService.updateCustomerDetails(req.body, req.params.id);
+      await this.customerDetailsService.updateCustomerDetails(req.body, req.params.customerId);
       res.status(result.code).json({
           code: result.code,
           data: result.data,

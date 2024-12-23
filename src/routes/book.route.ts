@@ -14,6 +14,7 @@ class BookRoutes {
   }
 
   private routes = (): void => {
+    
     // Create a book - Only admins
     this.router.post(
       '',
@@ -44,14 +45,14 @@ class BookRoutes {
 
     // get book by id - users/admins
     this.router.get(
-      '/:id',
+      '/:BookId',
       this.BookValidator.getBookById,
       this.BookController.getBook,
     );
 
     // Update book by id - Only admins
     this.router.put(
-      '/:id',
+      '/:BookId',
       authMiddleware(),
       isAdmin,
       this.BookValidator.getBookById,
@@ -60,7 +61,7 @@ class BookRoutes {
 
     // Delete book by id - Only admins
     this.router.delete(
-      '/:id',
+      '/:BookId',
       authMiddleware(),
       isAdmin,
       this.BookValidator.getBookById,

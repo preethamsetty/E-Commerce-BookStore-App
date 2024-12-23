@@ -50,11 +50,11 @@ class UserController {
     res: Response
   ): Promise<void> => {
     try {
-      const { accessToken, refreshToken, email } =
+      const data =
         await this.UserService.loginUser(req.body);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
-        data: { email, accessToken, refreshToken },
+        data: data,
         message: 'Log in successful',
       });
     } catch (error) {
@@ -71,8 +71,7 @@ class UserController {
     res: Response,
   ): Promise<void> => {
     try {
-      const { email } = req.body;
-      await this.UserService.forgotPassword(email);
+      await this.UserService.forgotPassword(req.body.email);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
         message: 'Reset token sent to email successfully',
@@ -134,7 +133,7 @@ class UserController {
         ...(lastName && { lastName }),
       };
       const updatedUser =
-      await this.UserService.updateUser(req.params.userId, updateData, req.file?.path);
+      await this.UserService.updateUser(req.body.userId, updateData, req.file?.path);
       
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,

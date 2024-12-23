@@ -7,11 +7,10 @@ const fileFilter = (
   file: Express.Multer.File,
   cb: (_error: Error | null, _acceptFile: boolean) => void
 ): void => {
-  if (file.mimetype.startsWith('image/')) {
+  if (file.mimetype.startsWith('image/'))
     cb(null, true);
-  } else {
+  else
     cb(new Error('Invalid file type'), false);
-  }
 };
 
 export const upload = multer({ storage, fileFilter });

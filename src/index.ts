@@ -4,8 +4,8 @@ dotenv.config();
 import express, { Application } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import swaggerUi from 'swagger-ui-express';  // Import Swagger UI
-import swaggerDocs from './swaggerConfig';   // Import the Swagger docs config
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocs from './swaggerConfig';
 
 import routes from './routes';
 import Database from './config/database';

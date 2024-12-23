@@ -61,7 +61,7 @@ class UserRoutes {
 
     //route to update the user details along with Profile Image
     this.router.put(
-      '/:userId',
+      '',
       upload.single('profilePicture'),
       authMiddleware(),
       this.UserController.updateUser);

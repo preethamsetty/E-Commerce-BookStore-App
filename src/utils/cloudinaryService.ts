@@ -10,12 +10,11 @@ cloudinary.config({
 
 export const uploadImage = async (
   filePath: string
-): Promise<UploadApiResponse> => {
-  return cloudinary.uploader.upload(filePath, {
-    folder: 'profile_pictures',
-    resource_type: 'image',
-  });
-};
+): Promise<UploadApiResponse> => 
+    cloudinary.uploader.upload(filePath, {
+      folder: 'profile_pictures',
+      resource_type: 'image',
+    });
 
 export default cloudinary;
 

@@ -36,11 +36,10 @@ class CartController {
     res: Response,
   ): Promise<void> => {
     try {
-      const quantityChange = req.body.quantityChange;
       const data = await this.CartService.updateQuantity(
         req.body.userId,
         req.params.BookId,
-        quantityChange,
+        req.body.quantityChange,
       );
 
       // Clear cache for the user's cart
@@ -110,10 +109,10 @@ class CartController {
     res: Response
   ): Promise<void> => {
     try {
-      const { userId } = req.body;
-      const data = await this.CartService.getCart(userId);
+      const data = await this.CartService.getCart(req.body.userId);
+      
       // Cache the cart data
-      const cacheKey = `cart:${userId}`;
+      const cacheKey = `cart:${req.body.userId}`;
       await redisClient.setEx(cacheKey, 3600, JSON.stringify(data));
 
       res.status(HttpStatus.OK).json({

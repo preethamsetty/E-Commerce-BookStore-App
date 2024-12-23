@@ -29,7 +29,7 @@ class CustomerDetailsRoutes {
 
     //Update customer Details
     this.router.put(
-      '/:id',
+      '/:customerId',
       authMiddleware(),
       this.customerDetailsController.updateCustomerDetails
     );

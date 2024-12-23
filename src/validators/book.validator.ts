@@ -19,13 +19,11 @@ class bookValidator {
       next: NextFunction
     ): void => {
       const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        res
-          .status(HttpStatus.BAD_REQUEST)
-          .json({ Code: 400, Errors: errors.array() });
-      } else {
+      if (!errors.isEmpty())
+        res.status(HttpStatus.BAD_REQUEST)
+           .json({ Code: 400, Errors: errors.array() });
+      else
         next();
-      }
     },
   ];
 
@@ -45,13 +43,12 @@ class bookValidator {
       next: NextFunction
     ): void => {
       const errors = validationResult(req);
-      if (!errors.isEmpty()) {
+      if (!errors.isEmpty())
         res
           .status(HttpStatus.BAD_REQUEST)
           .json({ Code: 400, Errors: errors.array() });
-      } else {
+      else
         next();
-      }
     },
   ];
 
@@ -65,13 +62,12 @@ class bookValidator {
       next: NextFunction
     ): void => {
       const errors = validationResult(req);
-      if (!errors.isEmpty()) {
+      if (!errors.isEmpty())
         res
           .status(HttpStatus.BAD_REQUEST)
           .json({ Code: 400, Errors: errors.array() });
-      } else {
+      else
         next();
-      }
     },
   ];
 }
