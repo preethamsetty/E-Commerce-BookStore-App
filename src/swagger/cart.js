@@ -18,6 +18,20 @@ const swaggerOptions = {
         description: 'Development server',
       },
     ],
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [
+      {
+        BearerAuth: [],
+      },
+    ],
   },
   apis: ['../routes/cart.route.ts'], // Adjust path as needed
 };
@@ -46,12 +60,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *         schema:
  *           type: string
  *         description: The ID of the book to add to the cart
- *       - in: header
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *         description: JWT token for user authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -77,12 +85,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *         schema:
  *           type: string
  *         description: The ID of the book to remove from the cart
- *       - in: header
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *         description: JWT token for user authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -108,12 +110,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *         schema:
  *           type: string
  *         description: The ID of the book to update in the cart
- *       - in: header
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *         description: JWT token for user authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -140,13 +136,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *   delete:
  *     summary: Delete the entire cart
  *     tags: [Cart]
- *     parameters:
- *       - in: header
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *         description: JWT token for user authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -165,13 +154,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *   get:
  *     summary: Retrieve the cart
  *     tags: [Cart]
- *     parameters:
- *       - in: header
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *         description: JWT token for user authentication
  *     responses:
  *       200:
  *         description: Cart retrieved successfully
