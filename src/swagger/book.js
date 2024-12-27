@@ -46,18 +46,32 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *           schema:
  *             type: object
  *             properties:
- *               title:
+ *               bookName:
  *                 type: string
- *                 example: "The Great Gatsby"
+ *                 example: "Know yourself"
  *               author:
  *                 type: string
- *                 example: "F. Scott Fitzgerald"
+ *                 example: "Preetham B S"
  *               price:
  *                 type: number
- *                 example: 10.99
+ *                 example: 1560
+ *               discountPrice:
+ *                 type: number
+ *                 example: 1000
+ *               bookImage:
+ *                 type: string
+ *                 format: uri
+ *                 example: "https://via.placeholder.com/150?text=Book+1"
  *               description:
  *                 type: string
- *                 example: "A classic novel of the Jazz Age."
+ *                 example: "Know yourself the best than others"
+ *               quantity:
+ *                 type: integer
+ *                 example: 30
+ *               adminId:
+ *                 type: string
+ *                 format: uuid
+ *                 example: "123e4567-e89b-12d3-a456-426614174000"
  *     responses:
  *       201:
  *         description: Book created successfully
@@ -84,9 +98,10 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *         description: Bad request
  */
 
+
 /**
  * @swagger
- * /books/sort:
+ * /books/sort/{page}:
  *   get:
  *     summary: Sort books by price
  *     tags: [Books]
@@ -97,22 +112,48 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *           type: string
  *           enum: [asc, desc]
  *         description: Sort order
- *       - in: query
+ *       - in: path
  *         name: page
+ *         required: true
  *         schema:
  *           type: integer
  *         description: Page number
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *         description: Number of items per page
  *     responses:
  *       200:
  *         description: Books sorted successfully
- *       400:
- *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: Books sorted successfully
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *       500:
+ *         description: Failed to sort books
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 500
+ *                 message:
+ *                   type: string
+ *                   example: Failed to sort books
+ *                 error:
+ *                   type: string
+ *                   example: Internal server error
  */
+
 
 /**
  * @swagger
