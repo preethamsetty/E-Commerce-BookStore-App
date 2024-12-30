@@ -119,7 +119,9 @@ class BookController {
       req: Request,
       res: Response,
     ): Promise<void> => {
+
       const data = await this.BookService.updateBook(req.params.BookId, req.body);
+
       try {
         // Clear cache after book update
         await redisClient.del('books');

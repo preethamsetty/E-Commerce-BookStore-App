@@ -26,7 +26,7 @@ class BookRoutes {
 
     // Getting all user books
     this.router.get(
-      '',
+      '/:page',
       cacheMiddleware('books'),
       this.BookController.getBooks,
     );
