@@ -57,7 +57,7 @@ class OrderService {
     return createdData;
   };
 
-  public getOrder = async (
+  public getOrders = async (
     userId: string
   ): Promise<IOrder[]> => {
     const orders = await Order.find({ userId });

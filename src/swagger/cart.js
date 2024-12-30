@@ -1,6 +1,8 @@
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const express = require('express');
+require('dotenv').config();
+
 
 const app = express();
 
@@ -14,8 +16,22 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
+        url: 'http://localhost:${process.env.APP_PORT}',
         description: 'Development server',
+      },
+    ],
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [
+      {
+        BearerAuth: [],
       },
     ],
   },
@@ -46,12 +62,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *         schema:
  *           type: string
  *         description: The ID of the book to add to the cart
- *       - in: header
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *         description: JWT token for user authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -77,12 +87,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *         schema:
  *           type: string
  *         description: The ID of the book to remove from the cart
- *       - in: header
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *         description: JWT token for user authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -108,12 +112,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *         schema:
  *           type: string
  *         description: The ID of the book to update in the cart
- *       - in: header
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *         description: JWT token for user authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -140,13 +138,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *   delete:
  *     summary: Delete the entire cart
  *     tags: [Cart]
- *     parameters:
- *       - in: header
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *         description: JWT token for user authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -165,13 +156,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *   get:
  *     summary: Retrieve the cart
  *     tags: [Cart]
- *     parameters:
- *       - in: header
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *         description: JWT token for user authentication
  *     responses:
  *       200:
  *         description: Cart retrieved successfully
@@ -179,7 +163,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *         description: Bad Request
  */
 
-app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
-  console.log('Swagger docs available at http://localhost:3000/api-docs');
+const PORT = process.env.APP_PORT;
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
 });

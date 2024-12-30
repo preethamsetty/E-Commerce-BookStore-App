@@ -32,7 +32,8 @@ class CartRoutes {
     this.router.delete(
       '',
       authMiddleware(),
-      this.CartController.deleteCart);
+      this.CartController.deleteCart
+    );
 
     this.router.get(
       '',

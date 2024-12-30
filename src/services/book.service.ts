@@ -24,6 +24,7 @@ class BookService {
   public getBooks = async (
     page: number,
   ): Promise<[IBook[], number]> => {
+
     const books = await Book.find().skip((page - 1) * 16).limit(16);
 
   if (books.length === 0) throw new Error('No Books Present');
@@ -51,7 +52,7 @@ class BookService {
   };
 
   //update book by Id
-  public updateBookInfoById = async (
+  public updateBook = async (
     bookId: string,
     updateData: Partial<IUser>,
   ): Promise<IBook | void> => {
