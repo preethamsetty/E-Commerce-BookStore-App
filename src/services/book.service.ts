@@ -23,12 +23,14 @@ class BookService {
   //Get Books
   public getBooks = async (
     page: number,
-  ): Promise<IBook[]> => {
+  ): Promise<[IBook[], number]> => {
     const books = await Book.find().skip((page - 1) * 16).limit(16);
 
   if (books.length === 0) throw new Error('No Books Present');
 
-  return books;
+  const totalBooks = await Book.countDocuments();
+
+  return [books, totalBooks];
   };
 
 
