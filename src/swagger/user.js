@@ -1,6 +1,7 @@
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const express = require('express');
+require('dotenv').config();
 
 const app = express();
 
@@ -14,7 +15,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
+        url: `http://localhost:${process.env.APP_PORT}`,
         description: 'Development server',
       },
     ],
@@ -46,9 +47,17 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *           schema:
  *             type: object
  *             required:
+ *               - firstName
+ *               - lastName
  *               - email
  *               - password
  *             properties:
+ *               firstName:
+ *                 type: string
+ *                 example: John
+ *               lastName:
+ *                 type: string
+ *                 example: Doe
  *               email:
  *                 type: string
  *                 example: user@example.com
@@ -75,9 +84,17 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *           schema:
  *             type: object
  *             required:
+ *               - firstName
+ *               - lastName
  *               - email
  *               - password
  *             properties:
+ *               firstName:
+ *                 type: string
+ *                 example: Jane
+ *               lastName:
+ *                 type: string
+ *                 example: Doe
  *               email:
  *                 type: string
  *                 example: admin@example.com
@@ -151,6 +168,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *   post:
  *     summary: Reset the user password
  *     tags: [Users]
+ *     description: Token should be provided at the top of the code manually.
  *     requestBody:
  *       required: true
  *       content:
@@ -158,13 +176,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *           schema:
  *             type: object
  *             required:
- *               - token
- *               - newPassword
+ *               - password
  *             properties:
- *               token:
- *                 type: string
- *                 example: abcdef123456
- *               newPassword:
+ *               password:
  *                 type: string
  *                 example: newpassword123
  *     responses:
@@ -174,19 +188,13 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *         description: Bad request
  */
 
+
 /**
  * @swagger
- * /users/{userId}:
+ * /users/:
  *   put:
  *     summary: Update user details along with profile picture
  *     tags: [Users]
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *         example: 60d21b4667d0d8992e610c85
  *     requestBody:
  *       required: true
  *       content:
@@ -210,7 +218,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *         description: Bad request
  */
 
-app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
-  console.log('Swagger docs available at http://localhost:3000/api-docs');
+
+const PORT = process.env.APP_PORT;
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
 });
