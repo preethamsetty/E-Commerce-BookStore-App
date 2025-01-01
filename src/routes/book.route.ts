@@ -45,7 +45,7 @@ class BookRoutes {
 
     // get book by id - users/admins
     this.router.get(
-      '/:BookId',
+      '/book/:BookId',
       this.BookValidator.getBookById,
       this.BookController.getBook,
     );

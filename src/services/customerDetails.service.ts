@@ -20,7 +20,10 @@ class CustomerDetailsService {
     data: ICustomerDetails | null;
     message: string;
   }> => {
-    const customerDetails = await CustomerDetails.findOne({ customerId });
+    console.log("Customer ID:", customerId, "Type:", typeof customerId);
+    console.log(body)
+    console.log(customerId)
+    const customerDetails = await CustomerDetails.findOne({_id: customerId });
 
     if (customerDetails) {
       customerDetails.name = body.name || customerDetails.name;
