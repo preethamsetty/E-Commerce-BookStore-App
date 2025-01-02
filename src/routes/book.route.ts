@@ -19,9 +19,9 @@ class BookRoutes {
     // Create a book - Only admins
     this.router.post(
       '',
+      upload.single('bookImage'),
       authMiddleware(),
       isAdmin,
-      upload.single('bookImage'),
       this.BookValidator.createBook,
       this.BookController.createBook,
     );
