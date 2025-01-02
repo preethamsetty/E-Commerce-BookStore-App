@@ -13,7 +13,7 @@ const bookSchema = new Schema(
     },
     bookImage: {
       type: String,
-      required: true,
+      default: ''
     },
     quantity: {
       type: Number,
@@ -33,7 +33,6 @@ const bookSchema = new Schema(
     },
     admin_user_id: {
       type: String,
-      required: true,
     },
   },
   {
