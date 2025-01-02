@@ -4,6 +4,7 @@ import { authMiddleware } from '../middlewares/auth.middleware';
 import isAdmin from '../middlewares/role.middleware';
 import bookValidator from '../validators/book.validator';
 import { cacheMiddleware } from '../middlewares/redis.middleware';
+import { upload } from '../middlewares/multer';
 class BookRoutes {
   private router = express.Router();
   private BookController = new BookController();
@@ -18,6 +19,7 @@ class BookRoutes {
     // Create a book - Only admins
     this.router.post(
       '',
+      upload.single('bookImage'),
       authMiddleware(),
       isAdmin,
       this.BookValidator.createBook,

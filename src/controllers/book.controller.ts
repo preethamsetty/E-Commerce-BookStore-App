@@ -12,7 +12,7 @@ class BookController {
       res: Response
     ): Promise<void> => {
       try {
-          const data = await this.BookService.createBook(req.body);
+          const data = await this.BookService.createBook(req.body,req.file?.path);
 
           // Clear cache 
           await redisClient.del('books');
