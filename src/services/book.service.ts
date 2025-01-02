@@ -51,7 +51,7 @@ class BookService {
   };
 
   //update book by Id
-  public updateBookInfoById = async (
+  public updateBook = async (
     bookId: string,
     updateData: Partial<IUser>,
   ): Promise<IBook | void> => {

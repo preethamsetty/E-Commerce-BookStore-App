@@ -64,7 +64,8 @@ class UserRoutes {
       '',
       upload.single('profilePicture'),
       authMiddleware(),
-      this.UserController.updateUser);
+      this.UserController.updateUser,
+    );
   };
 
   public getRoutes = (): IRouter => {
