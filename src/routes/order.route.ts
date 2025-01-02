@@ -22,7 +22,6 @@ class ordersRoutes {
     this.router.get(
       '',
       authMiddleware(),
-      cacheMiddleware('order'),
       this.OrderController.getOrders,
     );
   };
