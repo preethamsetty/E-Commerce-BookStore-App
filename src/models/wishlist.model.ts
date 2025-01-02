@@ -26,6 +26,14 @@ const wishListSchema = new Schema(
             type: Number,
             required: true,
           },
+          bookImage: {
+            type: String,
+            required: true,
+          },
+          discountedPrice: {
+            type: Number,
+            required: true,
+          },
         },
       ],
       default: [],
