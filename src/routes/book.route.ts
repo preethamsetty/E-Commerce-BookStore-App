@@ -4,6 +4,7 @@ import { authMiddleware } from '../middlewares/auth.middleware';
 import isAdmin from '../middlewares/role.middleware';
 import bookValidator from '../validators/book.validator';
 import { cacheMiddleware } from '../middlewares/redis.middleware';
+import { upload } from '../middlewares/multer';
 class BookRoutes {
   private router = express.Router();
   private BookController = new BookController();
@@ -20,6 +21,7 @@ class BookRoutes {
       '',
       authMiddleware(),
       isAdmin,
+      upload.single('bookImage'),
       this.BookValidator.createBook,
       this.BookController.createBook,
     );
@@ -45,7 +47,7 @@ class BookRoutes {
 
     // get book by id - users/admins
     this.router.get(
-      '/:BookId',
+      '/book/:BookId',
       this.BookValidator.getBookById,
       this.BookController.getBook,
     );

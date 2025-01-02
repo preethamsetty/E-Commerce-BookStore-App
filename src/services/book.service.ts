@@ -1,12 +1,25 @@
 import Book from '../models/book.model';
 import { IBook } from '../interfaces/book.interface';
 import { IUser } from '../interfaces/user.interface';
+import { uploadImage } from '../utils/cloudinaryService';
 
 class BookService {
   public createBook = async (
-    bookData: IBook
+    bookData: IBook,
+    filePath?: string
   ): Promise<IBook> => {
-    const book = new Book(bookData);
+
+     let bookImage = '';
+        if (filePath) {
+          const result = await uploadImage(filePath);
+          bookImage = result.secure_url;
+        }
+        const updatedBookData = {
+          ...bookData,
+          bookImage, 
+        };
+    const book = new Book(updatedBookData);
+    console.log(updatedBookData)
     const savedBook = await book.save();
     return savedBook;
   };

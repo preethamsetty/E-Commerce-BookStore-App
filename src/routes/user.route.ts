@@ -21,7 +21,11 @@ class UserRoutes {
       this.UserValidator.registerUser,
       this.UserController.registerUser,
     );
-
+    //get user details by id
+    this.router.get(
+      '',authMiddleware(),
+      this.UserController.getUserDataById,
+    );
     // Route to register an admin
     this.router.post(
       '/admin',
