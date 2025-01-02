@@ -38,17 +38,16 @@ class BookService {
   public getSearchedBooks = async (
     searchQuery: string,
     page: number,
-  ): Promise<IBook[]> => {
-    const searchedBooks = await Book.find({ $text: { $search: searchQuery } })
+  ): Promise<[IBook[], number]> => {
+    const searchedBooks = await Book.find({ 
+      bookName: { $regex: searchQuery, $options: 'i' }
+    })
       .skip((page - 1) * 20)
-      .limit(20);
+      .limit(20)
+    const totalBooksReg = await Book.countDocuments({ bookName: { $regex: searchQuery, $options: 'i' } });
+      return [searchedBooks, totalBooksReg]
+};
 
-    return searchedBooks.length
-      ? searchedBooks
-      : await Book.find({ bookName: { $regex: searchQuery, $options: 'i' } })
-          .skip((page - 1) * 20)
-          .limit(20);
-  };
 
   //update book by Id
   public updateBookInfoById = async (
