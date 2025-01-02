@@ -16,14 +16,13 @@ class ordersRoutes {
     this.router.post(
       '',
       authMiddleware(),
-      this.OrderController.orderCart
+      this.OrderController.orderCart,
     );
 
     this.router.get(
       '',
       authMiddleware(),
-      cacheMiddleware('order'),
-      this.OrderController.getOrder,
+      this.OrderController.getOrders,
     );
   };
 

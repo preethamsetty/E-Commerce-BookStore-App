@@ -54,7 +54,7 @@ class bookValidator {
 
   // Validate book ID
   public getBookById = [
-    check('id').isString().notEmpty().withMessage('Book ID is required.'),
+    check('BookId').isString().notEmpty().withMessage('Book ID is required.'),
 
     (
       req: Request,

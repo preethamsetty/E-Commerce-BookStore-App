@@ -51,8 +51,10 @@ class CustomerDetailsController {
     res: Response,
   ): Promise<void> => {
     try {
+      console.log(req.body , req.params.customerId)
       const result = 
       await this.customerDetailsService.updateCustomerDetails(req.body, req.params.customerId);
+      console.log(req.body , req.params.customerId)
       res.status(result.code).json({
           code: result.code,
           data: result.data,
