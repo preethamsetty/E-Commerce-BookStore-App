@@ -9,34 +9,29 @@ const orderSchema = new Schema(
     },
 
     cart: {
-      type: {
-        totalPrice: {
-          type: Number,
-          default: 0,
-        },
-        totalDiscountPrice: {
-          type: Number,
-          default: 0,
-        },
-        totalQuantity: {
-          type: Number,
-          default: 0,
-        },
-        books: {
-          type: [
-            {
-              bookId: { type: String, required: true },
-              quantity: { type: Number, required: true },
-            },
-          ],
-          default: [],
-        },
+      totalPrice: {
+        type: Number,
+        default: 0,
       },
+      totalDiscountPrice: {
+        type: Number,
+        default: 0,
+      },
+      totalQuantity: {
+        type: Number,
+        default: 0,
+      },
+      books: [
+        {
+          bookId: { type: Schema.Types.ObjectId, ref: 'Book' },
+          quantity: { type: Number, required: true },
+        },
+      ],
     },
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 orderSchema.index({ userId: 1 }, { background: true });

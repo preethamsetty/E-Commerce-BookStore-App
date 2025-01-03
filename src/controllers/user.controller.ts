@@ -64,7 +64,24 @@ class UserController {
       });
     }
   };
-
+  public getUserDataById = async (
+    req: Request,
+    res: Response
+  ): Promise<void> => {
+      try {
+          const data = await this.UserService.getUserDataById(req.body.userId);
+              res.status(HttpStatus.OK).json({
+                  code: HttpStatus.OK,
+                  message: 'Data fetched successfully',
+                  data
+              });
+          } catch (error) {
+            res.status(HttpStatus.BAD_REQUEST).json({
+                code: HttpStatus.BAD_REQUEST,
+                Error: error.message,
+            });
+          }
+    }
   //Forgot Password
   public forgotPassword = async (
     req: Request,
