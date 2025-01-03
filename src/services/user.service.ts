@@ -74,14 +74,6 @@ class UserService {
 
     await sendResetEmail(email, resetToken);
   };
-  //get book by id
-  public getUserDataById = async (
-    id: string
-  ): Promise<IUser | null> => {
-    const user = await User.findById({ _id: id });
-    if (!user) throw new Error('User Not found');
-    else return user;
-  };
 
   //reset password
   public resetPassword = async (body: {
