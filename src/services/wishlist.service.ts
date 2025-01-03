@@ -21,6 +21,8 @@ class WishlistService {
             bookName: bookDetails.bookName,
             author: bookDetails.author,
             price: bookDetails.price,
+            discountedPrice: bookDetails.discountPrice,
+            bookImage: bookDetails.bookImage
           },
         ],
       });
@@ -36,6 +38,8 @@ class WishlistService {
           bookName: bookDetails.bookName,
           author: bookDetails.author,
           price: bookDetails.price,
+          bookImage: bookDetails.bookImage,
+          discountedPrice: bookDetails.discountPrice,
         });
         await wishlist.save();
       } else throw new Error('Book already in wishlist');

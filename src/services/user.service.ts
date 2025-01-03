@@ -22,6 +22,15 @@ class UserService {
     return data;
   };
 
+  //get book by id
+    public getUserDataById = async (
+      id: string
+    ): Promise<IUser | null> => {
+      const user = await User.findById({ _id: id });
+      if (!user) throw new Error('User Not found');
+      else return user;
+    };
+
   // Log in user
   public loginUser = async (body: {
     email: string;
