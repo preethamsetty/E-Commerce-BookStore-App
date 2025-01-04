@@ -49,9 +49,7 @@ class UserRoutes {
 
     //route to refreshToken
     this.router.get(
-      '',
-      authMiddleware(),
-      this.UserValidator.id,
+      '/refreshtoken',
       this.UserController.refreshtoken,
     );
 

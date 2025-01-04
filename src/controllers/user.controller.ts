@@ -121,23 +121,34 @@ class UserController {
     }
   };
 
-  public refreshtoken = async (
-    req: Request,
-    res: Response
-  ): Promise<void> => {
+  public refreshtoken = async (req: Request, res: Response): Promise<void> => {
     try {
-      const token = await this.UserService.refreshToken(req.body.userId);
+      const refreshToken = req.header("Authorization")?.split(" ")[1];
+  
+      if (!refreshToken) {
+        res.status(HttpStatus.BAD_REQUEST).json({
+          code: HttpStatus.BAD_REQUEST,
+          message: "Refresh token is required",
+        });
+        return;
+      }
+      const newAccessToken = 
+      await this.UserService.refreshToken(refreshToken);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
-        data: token,
+        data: { accessToken: newAccessToken },
       });
     } catch (error) {
-      res.status(HttpStatus.BAD_REQUEST).json({
-        code: HttpStatus.BAD_REQUEST,
-        message: `${error.message}`,
+      console.error("Error refreshing token:", error);
+  
+      res.status(HttpStatus.UNAUTHORIZED).json({
+        code: HttpStatus.UNAUTHORIZED,
+        message: error.message || "Failed to refresh token",
       });
     }
   };
+  
+  
   //update the user details along with Profile Image
   public updateUser = async (
     req: Request,
@@ -164,26 +175,6 @@ class UserController {
       });
     }
   };
-
-  public getUserDataById = async (
-    req: Request,
-    res: Response
-  ): Promise<void> => {
-      try {
-          const data = await this.UserService.getUserDataById(req.body.userId);
-              res.status(HttpStatus.OK).json({
-                  code: HttpStatus.OK,
-                  message: 'Data fetched successfully',
-                  data
-              });
-          } catch (error) {
-            res.status(HttpStatus.BAD_REQUEST).json({
-                code: HttpStatus.BAD_REQUEST,
-                Error: error.message,
-            });
-          }
-    };
-  
 }
 
 export default UserController;

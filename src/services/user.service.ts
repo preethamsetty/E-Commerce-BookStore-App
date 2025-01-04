@@ -46,7 +46,7 @@ class UserService {
 
     const accessToken = jwt.sign(
       { user: { _id: user._id, role: user.role, email: user.email } },
-      process.env.AUTH_SECRET_KEY /* ,{expiresIn:'60s'} */,
+      process.env.AUTH_SECRET_KEY  ,{expiresIn:'60s'},
     );
 
     const refreshToken = jwt.sign(
@@ -88,24 +88,46 @@ class UserService {
   };
 
   //refreshToken usage
-  public refreshToken = async (
-    id: string
-  ): Promise<string> => {
-    const userData = await User.findOne({ _id: id });
-    if (!userData) throw new Error('User Not Found');
-    const { user } = jwt.verify(
-      userData.refreshToken,
-      process.env.REFRESH_SECRET_KEY,
-    ) as {
-      user: { _id: string; role: string; email: string };
-    };
+  public refreshToken = async (refreshToken: string): 
+  Promise<{ accessToken: string; refreshToken?: string }> => {
+    try {
+        const decodedToken = jwt.verify(refreshToken, 
+        process.env.REFRESH_SECRET_KEY!) as {
+        user: { _id: string; role: string; email: string };
+        };
 
-    return jwt.sign(
-      { user: { _id: user._id, role: user.role, email: user.email } },
-      process.env.AUTH_SECRET_KEY,
-      { expiresIn: '30m' },
-    );
-  };
+        if (!decodedToken || !decodedToken.user) {
+            throw new Error("Invalid refresh token");
+        }
+        const { _id, role, email } = decodedToken.user;
+        const userData = await User.findById(_id);
+        if (!userData) {
+            throw new Error("User not found");
+        }
+        if (userData.refreshToken !== refreshToken) {
+            throw new Error("Refresh token mismatch");
+        }
+        const newAccessToken = jwt.sign(
+            { user: { _id, role, email } },
+            process.env.AUTH_SECRET_KEY!,
+            { expiresIn: "30m" }
+        );
+        const newRefreshToken = jwt.sign(
+            { user: { _id, role, email } },
+            process.env.REFRESH_SECRET_KEY!,
+            { expiresIn: "7d" }
+        );
+        userData.refreshToken = newRefreshToken;
+        await userData.save();
+
+        return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+    } catch (error) {
+        console.error("Error in refreshToken service:", error.message);
+        throw new Error("Invalid or expired refresh token");
+    }
+};
+
+  
 
   //update the user details along with Profile Image
   public async updateUser(
