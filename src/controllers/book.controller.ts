@@ -91,6 +91,29 @@ class BookController {
       }
     };
 
+    
+    public getAdminBooks = async (
+      req: Request,
+      res: Response
+    ): Promise<void> => {
+            
+      try {
+      // Fetch from database if not in cache
+      const data = await this.BookService.getAdminBooks(req.body.admin_user_id);
+        res.status(HttpStatus.OK).json({
+          code: HttpStatus.OK,
+          data,
+          message: 'Book Fetched Successfully',
+        });
+      } catch (error) {
+        res.status(HttpStatus.BAD_REQUEST).json({
+          code: HttpStatus.BAD_REQUEST,
+          Error: error.message,
+        });
+      }
+  
+  };
+
     //Get All Serched User Books
     public getSearchedBooks = async (
       req: Request,

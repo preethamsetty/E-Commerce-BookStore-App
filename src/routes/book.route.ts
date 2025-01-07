@@ -26,6 +26,14 @@ class BookRoutes {
       this.BookController.createBook,
     );
 
+    // Getting all Admin books
+    this.router.get(
+      '/adminbooks',
+      authMiddleware(),
+      isAdmin,
+      this.BookController.getAdminBooks,
+    );
+
     // Getting all user books
     this.router.get(
       '/:page',
