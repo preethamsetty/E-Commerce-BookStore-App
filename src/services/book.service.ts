@@ -36,9 +36,10 @@ class BookService {
   //Get Books
   public getBooks = async (
     page: number,
+    sortQuery: number,
   ): Promise<[IBook[], number]> => {
   
-  const books = await Book.find().skip((page - 1) * 20).limit(20);
+  const books = await Book.find().sort(sortQuery ? {discountPrice: sortQuery} : {}).skip((page - 1) * 20).limit(20);
 
   if (books.length === 0) throw new Error('No Books Present');
 
@@ -51,11 +52,13 @@ class BookService {
   // Get all searched user books
   public getSearchedBooks = async (
     searchQuery: string,
+    sortQuery: number,
     page: number,
   ): Promise<[IBook[], number]> => {
+
     const searchedBooks = await Book.find({ 
       bookName: { $regex: searchQuery, $options: 'i' }
-    })
+    }).sort(sortQuery ? {price: sortQuery} : {})
       .skip((page - 1) * 20)
       .limit(20)
     const totalBooksReg = await Book.countDocuments({ bookName: { $regex: searchQuery, $options: 'i' } });
