@@ -26,11 +26,9 @@ const cartSchema = new Schema(
           quantity: { type: Number, required: true },
           bookName: {
             type: String,
-           
           },
           author: {
             type: String,
-            
           },
           bookImage: {
             type: String,
@@ -38,15 +36,12 @@ const cartSchema = new Schema(
           },
           price: {
             type: Number,
-            //required: true,
           },
           description: {
             type: String,
-           // required: true,
           },
           discountPrice: {
             type: Number,
-            // required: true,
           },
           admin_user_id: {
             type: String,
