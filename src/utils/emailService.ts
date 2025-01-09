@@ -20,7 +20,7 @@ const sendResetEmail = async (
   email: string,
   resetToken: string,
 ): Promise<{ success: boolean; message: string }> => {
-  const resetLink = `${process.env.APP}/api/v1/users/resetpassword?resetToken=${resetToken}`;
+  const resetLink = `${process.env.APP}/resetpassword?resetToken=${resetToken}`;
   const mailOptions = {
     from: process.env.SECRET_MAIL_ID,
     to: email,
