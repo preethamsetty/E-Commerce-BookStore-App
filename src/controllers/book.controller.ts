@@ -62,21 +62,21 @@ class BookController {
   
       try {
         // Check cache first
-        const cachedData = await redisClient.get(cacheKey);
-        if (cachedData) {
-          res.status(HttpStatus.OK).json({
-            code: HttpStatus.OK,
-            data: JSON.parse(cachedData),
-            message: 'Books fetched successfully (from cache)',
-          });
-          return;
-        }
+        // const cachedData = await redisClient.get(cacheKey);
+        // if (cachedData) {
+        //   res.status(HttpStatus.OK).json({
+        //     code: HttpStatus.OK,
+        //     data: JSON.parse(cachedData),
+        //     message: 'Books fetched successfully (from cache)',
+        //   });
+        //   return;
+        // }
   
         // Fetch from database if not in cache
-        const data = await this.BookService.getBooks(Number(req.params.page));
+        const data = await this.BookService.getBooks(Number(req.params.page), Number(req.query.sortQuery));
   
         // Cache the fetched books data
-        await redisClient.setEx(cacheKey, 3600, JSON.stringify(data));
+        // await redisClient.setEx(cacheKey, 3600, JSON.stringify(data));
   
         res.status(HttpStatus.OK).json({
           code: HttpStatus.OK,
@@ -98,7 +98,9 @@ class BookController {
     ): Promise<void> => {
       const data =
         await this.BookService.getSearchedBooks(
-          req.query.searchQuery as string, Number(req.params.page)
+          req.query.searchQuery as string,
+          Number(req.query.sortQuery),
+          Number(req.params.page),
         );
       try {
         res.status(HttpStatus.OK).json({
