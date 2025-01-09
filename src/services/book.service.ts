@@ -68,7 +68,7 @@ class BookService {
 
     const searchedBooks = await Book.find({ 
       bookName: { $regex: searchQuery, $options: 'i' }
-    }).sort(sortQuery ? {price: sortQuery} : {})
+    }).sort(sortQuery ? {discountPrice: sortQuery} : {})
       .skip((page - 1) * 20)
       .limit(20)
     const totalBooksReg = await Book.countDocuments({ bookName: { $regex: searchQuery, $options: 'i' } });
