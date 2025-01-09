@@ -46,7 +46,7 @@ class UserService {
 
     const accessToken = jwt.sign(
       { user: { _id: user._id, role: user.role, email: user.email } },
-      process.env.AUTH_SECRET_KEY  ,{expiresIn:'60s'},
+      process.env.AUTH_SECRET_KEY  ,{expiresIn:'15m'},
     );
 
     const refreshToken = jwt.sign(
