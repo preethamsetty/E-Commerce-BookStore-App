@@ -48,6 +48,16 @@ class BookService {
   return [books, totalBooks];
   };
 
+   // Get all allAdminBooks
+   public getAdminBooks = async (admin_user_id: string): Promise<IBook[] | null> => {
+    const allAdminBooks = await Book.find({ admin_user_id }); 
+    if (!allAdminBooks || allAdminBooks.length === 0) {
+      throw new Error('Books Not found');
+    }
+    return allAdminBooks;
+  };
+  
+
 
   // Get all searched user books
   public getSearchedBooks = async (
