@@ -38,7 +38,6 @@ class CartRoutes {
     this.router.get(
       '',
       authMiddleware(),
-      cacheMiddleware('cart'),
       this.CartController.getCart,
     );
   };
